@@ -142,6 +142,56 @@ export default function ComoFuncionaContent() {
         </div>
       </section>
 
+      {/* Seção 3 - Geração de Clientes */}
+      <section className="w-full py-24 px-6 md:px-12 relative overflow-hidden">
+        <div className="absolute inset-0 bg-brand-emerald/5 dark:bg-brand-emerald/10 -z-10" />
+        <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex-1"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-emerald/20 text-brand-emerald font-semibold text-sm mb-6">
+              <Megaphone className="w-4 h-4" />
+              Marketing Estratégico
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold font-montserrat mb-6 leading-tight">
+              Nós Investimos para <br/>
+              <span className="text-brand-emerald">Gerar Oportunidades</span>
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
+              A INTEGRA Soluções SC investe continuamente na geração de novos clientes através de estratégias de marketing digital e publicidade online.
+            </p>
+            <p className="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
+              Enquanto nossos parceiros focam na execução dos serviços, nós focamos na prospecção, qualificação e gestão dos leads. Nosso objetivo é facilitar o acesso dos clientes a empresas qualificadas.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {['Google Ads', 'Redes Sociais', 'SEO', 'Marketing de Conteúdo', 'Geração de Leads', 'Divulgação Regional'].map((tag, i) => (
+                <span key={i} className="px-4 py-2 rounded-lg bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-200">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="flex-1 relative"
+          >
+            <div className="aspect-square max-w-[500px] mx-auto rounded-full bg-gradient-to-tr from-brand-emerald/20 to-blue-500/20 flex items-center justify-center relative p-8">
+               <div className="absolute inset-0 border-[40px] border-white/40 dark:border-slate-800/40 rounded-full animate-pulse-subtle" />
+               <div className="w-full h-full rounded-full bg-white dark:bg-slate-800 shadow-2xl flex items-center justify-center overflow-hidden border border-slate-100 dark:border-slate-700 relative z-10">
+                 <BarChart className="w-32 h-32 text-brand-emerald opacity-20 absolute top-10 right-10" />
+                 <Users className="w-32 h-32 text-blue-500 opacity-20 absolute bottom-10 left-10" />
+                 <Megaphone className="w-24 h-24 text-brand-orange relative z-20" />
+               </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Seção 2 - Nosso Sistema de Qualificação */}
       <section className="w-full py-24 px-6 md:px-12 max-w-[1200px] mx-auto">
         <motion.div 
@@ -253,56 +303,6 @@ export default function ComoFuncionaContent() {
               <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
               <img src="/images/crm-dashboard-2.png" alt="Lista de empresas no CRM com pontuação e status" className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" />
             </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Seção 3 - Geração de Clientes */}
-      <section className="w-full py-24 px-6 md:px-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-brand-emerald/5 dark:bg-brand-emerald/10 -z-10" />
-        <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="flex-1"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-emerald/20 text-brand-emerald font-semibold text-sm mb-6">
-              <Megaphone className="w-4 h-4" />
-              Marketing Estratégico
-            </div>
-            <h2 className="text-3xl md:text-5xl font-bold font-montserrat mb-6 leading-tight">
-              Nós Investimos para <br/>
-              <span className="text-brand-emerald">Gerar Oportunidades</span>
-            </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
-              A INTEGRA Soluções SC investe continuamente na geração de novos clientes através de estratégias de marketing digital e publicidade online.
-            </p>
-            <p className="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
-              Enquanto nossos parceiros focam na execução dos serviços, nós focamos na prospecção, qualificação e gestão dos leads. Nosso objetivo é facilitar o acesso dos clientes a empresas qualificadas.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {['Google Ads', 'Redes Sociais', 'SEO', 'Marketing de Conteúdo', 'Geração de Leads', 'Divulgação Regional'].map((tag, i) => (
-                <span key={i} className="px-4 py-2 rounded-lg bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-200">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="flex-1 relative"
-          >
-            <div className="aspect-square max-w-[500px] mx-auto rounded-full bg-gradient-to-tr from-brand-emerald/20 to-blue-500/20 flex items-center justify-center relative p-8">
-               <div className="absolute inset-0 border-[40px] border-white/40 dark:border-slate-800/40 rounded-full animate-pulse-subtle" />
-               <div className="w-full h-full rounded-full bg-white dark:bg-slate-800 shadow-2xl flex items-center justify-center overflow-hidden border border-slate-100 dark:border-slate-700 relative z-10">
-                 <BarChart className="w-32 h-32 text-brand-emerald opacity-20 absolute top-10 right-10" />
-                 <Users className="w-32 h-32 text-blue-500 opacity-20 absolute bottom-10 left-10" />
-                 <Megaphone className="w-24 h-24 text-brand-orange relative z-20" />
-               </div>
-            </div>
           </motion.div>
         </div>
       </section>
