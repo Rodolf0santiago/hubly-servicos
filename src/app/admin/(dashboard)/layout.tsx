@@ -157,9 +157,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Brand */}
             <div className="flex items-center gap-3">
               <img src="/images/logo.png" alt="Integra Soluções SC" className="h-8 w-auto object-contain drop-shadow-md" />
-              <span className="font-montserrat font-black text-white text-lg tracking-tight hidden md:block">
-                Integra
-              </span>
+              <div className="flex flex-col hidden md:flex pt-1">
+                <div className="flex items-baseline gap-1">
+                  <span className="font-montserrat font-black text-white text-xl tracking-tighter uppercase leading-none">INTEGRA</span>
+                </div>
+              </div>
             </div>
         </div>
 
