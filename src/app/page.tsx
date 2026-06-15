@@ -7,6 +7,7 @@ import InteractiveHouse from '@/components/InteractiveHouse';
 import GaleriaSection from '@/components/GaleriaSection';
 import LeadForm from '@/components/LeadForm';
 import Footer from '@/components/Footer';
+import CompanyMetricsShowcase from '@/components/CompanyMetricsShowcase';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { getAllSiteSettingsAction } from '@/app/actions/settings';
 
@@ -51,6 +52,8 @@ export default async function Home() {
       <div className="w-full bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-sm border-y border-slate-200/50 dark:border-slate-800/50">
         <TrustSection data={settings?.trust} />
       </div>
+      
+      <CompanyMetricsShowcase />
       
       <GaleriaSection />
       <LeadForm />
