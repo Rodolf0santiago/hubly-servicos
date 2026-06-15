@@ -59,7 +59,7 @@ export default function ComoFuncionaContent() {
             Transparência e Qualidade
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-8 leading-tight font-montserrat">
-            Como Funciona a <span className="text-brand-emerald">INTEGRA</span> Soluções SC
+            Como Trabalhamos na <span className="text-brand-emerald">INTEGRA</span> Soluções SC
           </h1>
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed mb-10">
             Conectamos clientes às melhores empresas parceiras, com acompanhamento, controle de qualidade e gestão completa através do nosso CRM.
@@ -214,6 +214,45 @@ export default function ComoFuncionaContent() {
             <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
               Isso garante uma rede em constante evolução e melhoria contínua, recompensando quem entrega os melhores resultados.
             </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Seção 2.5 - CRM de Acompanhamento */}
+      <section className="w-full py-24 px-6 md:px-12 bg-white/50 dark:bg-slate-900/30 backdrop-blur-md border-y border-slate-200 dark:border-slate-800">
+        <div className="max-w-[1440px] mx-auto text-center">
+          <motion.div 
+            initial="hidden" 
+            whileInView="visible" 
+            viewport={{ once: true }}
+            variants={fadeUp}
+            className="mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold text-sm mb-6 border border-blue-500/20">
+              <Activity className="w-4 h-4" />
+              Monitoramento em Tempo Real
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold font-montserrat mb-4 text-brand-navy dark:text-white">Acompanhamento e Gestão Exclusiva</h2>
+            <p className="text-slate-500 dark:text-slate-400 max-w-3xl mx-auto">
+              Utilizamos um sistema de CRM próprio para acompanhar de perto a performance das empresas homologadas. Monitoramos pontuação, avaliação de qualidade e cumprimento de prazos para garantir a excelência do serviço.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            initial="hidden" 
+            whileInView="visible" 
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="flex flex-col lg:flex-row gap-8 justify-center items-center"
+          >
+            <motion.div variants={fadeUp} className="w-full lg:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 relative group">
+              <div className="absolute inset-0 bg-brand-emerald/10 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
+              <img src="/images/crm-dashboard-1.jpg" alt="Dashboard do CRM mostrando empresas homologadas e qualidade da rede" className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" />
+            </motion.div>
+            <motion.div variants={fadeUp} className="w-full lg:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 relative group">
+              <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
+              <img src="/images/crm-dashboard-2.png" alt="Lista de empresas no CRM com pontuação e status" className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" />
+            </motion.div>
           </motion.div>
         </div>
       </section>

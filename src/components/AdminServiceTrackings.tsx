@@ -223,6 +223,18 @@ export default function AdminServiceTrackings() {
         empresa_whatsapp: undefined,
         empresa_email: undefined
       });
+      return;
+    }
+
+    const company = companies.find(c => c.id === companyId);
+    if (company) {
+      setEditingTracking({
+        ...editingTracking,
+        empresa_id: company.id,
+        empresa_nome: company.nome_fantasia || '',
+        empresa_whatsapp: company.whatsapp || undefined,
+        empresa_email: company.email || undefined
+      });
     }
   };
 

@@ -31,7 +31,7 @@ export default async function Home() {
         <div className="flex items-center gap-6 md:gap-8 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md px-6 py-3 rounded-full border border-slate-200/50 dark:border-slate-800/50">
           <Link href="/como-funciona" className="flex items-center gap-2 px-4 py-2 bg-brand-emerald/10 hover:bg-brand-emerald/20 text-brand-emerald dark:text-emerald-400 border border-brand-emerald/20 rounded-full text-sm md:text-base font-semibold transition-all">
             <Info className="w-4 h-4" />
-            Como Funciona
+            Como Trabalhamos
           </Link>
           <ThemeToggle />
         </div>
