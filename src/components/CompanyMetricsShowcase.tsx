@@ -70,7 +70,7 @@ export default function CompanyMetricsShowcase() {
               style={{ opacity: opacity1, scale: scale1 }}
             >
               <img 
-                src="/images/crm-dashboard-1.jpg" 
+                src="/images/crm-dashboard-1.jpg?v=2" 
                 alt="Lista de Empresas Homologadas" 
                 className="w-full h-full object-cover object-left-top"
               />
@@ -82,7 +82,7 @@ export default function CompanyMetricsShowcase() {
               style={{ y: y2 }}
             >
               <img 
-                src="/images/crm-dashboard-2.png" 
+                src="/images/crm-dashboard-2.png?v=2" 
                 alt="Dashboard de Métricas" 
                 className="w-full h-full object-cover object-left-top"
               />
