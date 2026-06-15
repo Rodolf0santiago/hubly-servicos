@@ -70,7 +70,8 @@ export default function ServicesCards({ data }: ServicesCardsProps) {
           >
             <div className="absolute inset-0 bg-brand-emerald/5 rounded-[2rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             
-            <div className="relative glass dark:glass-dark rounded-[2rem] overflow-hidden p-5 flex items-center gap-6 border border-white/40 dark:border-slate-700/30 transition-all duration-300 group-hover:border-brand-emerald/30 group-hover:shadow-2xl group-hover:shadow-brand-emerald/10">
+            <Link href={service.href || '#'} className="block outline-none cursor-pointer">
+              <div className="relative glass dark:glass-dark rounded-[2rem] overflow-hidden p-5 flex items-center gap-6 border border-white/40 dark:border-slate-700/30 transition-all duration-300 group-hover:border-brand-emerald/30 group-hover:shadow-2xl group-hover:shadow-brand-emerald/10">
               {/* Image Container */}
               <div className="w-24 h-24 flex-shrink-0 bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-2 relative overflow-hidden group-hover:scale-105 transition-transform duration-500">
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-emerald/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -93,8 +94,8 @@ export default function ServicesCards({ data }: ServicesCardsProps) {
                   {service.title}
                 </h3>
 
-                <Link href={service.href || '#'} className="inline-flex">
-                  <button className="relative group/btn bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-[10px] font-black py-2.5 px-5 rounded-xl transition-all hover:pr-8 active:scale-95 uppercase tracking-widest flex items-center gap-2 overflow-hidden">
+                <div className="inline-flex">
+                  <div className="relative group/btn bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-[10px] font-black py-2.5 px-5 rounded-xl transition-all hover:pr-8 active:scale-95 uppercase tracking-widest flex items-center gap-2 overflow-hidden">
                     <span className="relative z-10">
                       {service.id === 'limpeza_solar' ? 'Calcular Perda' : 
                        service.id === 'instalacao_manutencao' ? 'Instalação' : 
@@ -104,13 +105,14 @@ export default function ServicesCards({ data }: ServicesCardsProps) {
                        service.id === 'carregamento_veicular' ? 'Carregador' : 'Climatização'}
                     </span>
                     <ChevronRight className="w-3 h-3 absolute right-3 opacity-0 -translate-x-2 group-hover/btn:opacity-100 group-hover/btn:translate-x-0 transition-all" />
-                  </button>
-                </Link>
+                  </div>
+                </div>
               </div>
 
               {/* Shine Effect Overlay */}
               <div className="absolute inset-0 pointer-events-none group-hover:animate-shine bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full" />
-            </div>
+              </div>
+            </Link>
           </motion.div>
         ))}
       </motion.div>
