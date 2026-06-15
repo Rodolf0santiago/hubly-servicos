@@ -38,7 +38,12 @@ export default function ComoFuncionaContent() {
         <Link href="/" className="flex items-center group cursor-pointer">
           <img src="/images/logo.png" alt="Integra Soluções SC" className="h-16 md:h-20 lg:h-24 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105" />
         </Link>
-        <ThemeToggle />
+        <div className="flex items-center gap-6 md:gap-8 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md px-6 py-3 rounded-full border border-slate-200/50 dark:border-slate-800/50">
+          <Link href="/" className="text-sm md:text-base font-semibold text-slate-700 dark:text-slate-200 hover:text-brand-emerald dark:hover:text-brand-emerald transition-colors">
+            Início
+          </Link>
+          <ThemeToggle />
+        </div>
       </header>
 
       {/* Hero Section */}
