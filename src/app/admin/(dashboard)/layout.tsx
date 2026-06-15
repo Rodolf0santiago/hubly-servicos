@@ -83,7 +83,7 @@ function SidebarNav() {
           : 'text-slate-400 hover:text-white hover:bg-slate-800'
         }`}
       >
-        <ClipboardList className="w-4 h-4" /> Acompanhamento
+        <ClipboardList className="w-4 h-4" /> Acompanhamento de Serviços
       </Link>
       <Link 
         href="/admin?tab=relatorios" 
