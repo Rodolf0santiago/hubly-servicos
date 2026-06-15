@@ -22,7 +22,8 @@ import {
   BadgeCheck,
   Settings,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Sun
 } from 'lucide-react';
 
 const DEFAULT_HERO = {
@@ -237,8 +238,25 @@ const DEFAULT_TRUST = {
   ]
 };
 
+const DEFAULT_INSTALACAO_PAGE = {
+  ongrid_badge: 'Conectado à Rede',
+  ongrid_title1: 'Sistemas',
+  ongrid_title2: 'On-Grid',
+  ongrid_desc1: 'O sistema on-grid é a solução ideal para quem busca economia imediata conectada à rede elétrica tradicional. Toda a energia solar captada pelos painéis é consumida diretamente pelo seu imóvel, e o excedente produzido é injetado na rede da concessionária local, transformando-se em créditos valiosos para a sua fatura.',
+  ongrid_desc2: 'Quando o sol se põe ou em dias de baixa irradiação, você continua utilizando a energia da rede pública normalmente, garantindo um abastecimento contínuo e sem interrupções.',
+  ongrid_image: '/images/sistema_ongrid.png',
+
+  hibrido_badge: 'Armazenamento Próprio',
+  hibrido_title1: 'Sistemas',
+  hibrido_title2: 'Híbridos',
+  hibrido_title3: 'e Backup',
+  hibrido_desc1: 'Tenha o melhor dos dois mundos. O sistema híbrido une a praticidade e os créditos da conexão com a rede pública à segurança do armazenamento próprio através de baterias modernas.',
+  hibrido_desc2: 'Além de reduzir sua conta de luz exportando a energia excedente, parte da produção é armazenada para garantir o funcionamento da sua casa ou empresa durante a noite ou em casos de apagões e falhas no fornecimento da concessionária. Máxima autonomia, segurança e flexibilidade para o seu dia a dia.',
+  hibrido_image: '/images/sistema_hibrido.png'
+};
+
 export default function AdminCMS() {
-  const [subTab, setSubTab] = useState<'hero' | 'services' | 'testimonials' | 'trust' | 'general'>('hero');
+  const [subTab, setSubTab] = useState<'hero' | 'services' | 'instalacao_page' | 'testimonials' | 'trust' | 'general'>('hero');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -249,6 +267,7 @@ export default function AdminCMS() {
   const [servicesData, setServicesData] = useState(DEFAULT_SERVICES);
   const [testimonialsData, setTestimonialsData] = useState(DEFAULT_TESTIMONIALS);
   const [trustData, setTrustData] = useState(DEFAULT_TRUST);
+  const [instalacaoPageData, setInstalacaoPageData] = useState(DEFAULT_INSTALACAO_PAGE);
   const [generalData, setGeneralData] = useState({ whatsappNumber: '5548999999999' });
 
   // Loading image state
@@ -277,6 +296,7 @@ export default function AdminCMS() {
         }
         if (data.testimonials) setTestimonialsData(data.testimonials);
         if (data.trust) setTrustData({ ...DEFAULT_TRUST, ...data.trust });
+        if (data.instalacao_page) setInstalacaoPageData({ ...DEFAULT_INSTALACAO_PAGE, ...data.instalacao_page });
         if (data.general) setGeneralData({ ...generalData, ...data.general });
       }
     } catch (err: any) {
@@ -362,6 +382,7 @@ export default function AdminCMS() {
         {[
           { id: 'hero', name: 'Seção Principal (Hero)', icon: Sparkles },
           { id: 'services', name: 'Serviços', icon: ShieldCheck },
+          { id: 'instalacao_page', name: 'Página: Solar', icon: Sun },
           { id: 'testimonials', name: 'Depoimentos', icon: MessageSquare },
           { id: 'trust', name: 'Por que Nós? (Confiança)', icon: BadgeCheck },
           { id: 'general', name: 'Configurações Gerais', icon: Settings },
@@ -1006,6 +1027,126 @@ export default function AdminCMS() {
                   <Save className="w-4 h-4" />
                 )}
                 Salvar Seção Confiança
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ABA PÁGINA INSTALAÇÃO */}
+        {subTab === 'instalacao_page' && (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 mb-1">Página de Instalação Solar</h3>
+              <p className="text-xs text-slate-500">Configure os textos e fotos das seções On-Grid e Híbrido.</p>
+            </div>
+
+            {/* ON-GRID */}
+            <div className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4">
+              <h4 className="text-sm font-bold text-slate-700 border-b border-slate-200 pb-2">Sistema On-Grid</h4>
+              
+              <div className="flex flex-col md:flex-row gap-6">
+                {/* Imagem On-Grid */}
+                <div className="w-full md:w-1/3 flex flex-col gap-2">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Foto On-Grid</label>
+                  <div className="aspect-video bg-white border border-slate-200 rounded-lg p-1 flex flex-col items-center justify-center relative overflow-hidden">
+                    {uploadingImageId === 'ongrid_img' ? (
+                      <Loader2 className="w-6 h-6 text-brand-emerald animate-spin" />
+                    ) : (
+                      <>
+                        <img src={instalacaoPageData.ongrid_image} alt="On-Grid" className="w-full h-full object-cover rounded" />
+                        <label className="absolute inset-0 bg-slate-900/60 text-white text-[10px] font-bold opacity-0 hover:opacity-100 flex flex-col justify-center items-center cursor-pointer transition-opacity">
+                          <Upload className="w-4 h-4 mb-1" /> Trocar Foto
+                          <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setInstalacaoPageData({ ...instalacaoPageData, ongrid_image: url }), 'ongrid_img')} />
+                        </label>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="w-full md:w-2/3 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Badge</label>
+                      <input type="text" value={instalacaoPageData.ongrid_badge} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, ongrid_badge: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título 1 (Preto)</label>
+                      <input type="text" value={instalacaoPageData.ongrid_title1} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, ongrid_title1: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título 2 (Destaque Verde)</label>
+                      <input type="text" value={instalacaoPageData.ongrid_title2} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, ongrid_title2: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald" />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Parágrafo 1</label>
+                    <textarea value={instalacaoPageData.ongrid_desc1} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, ongrid_desc1: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald min-h-[60px]" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Parágrafo 2</label>
+                    <textarea value={instalacaoPageData.ongrid_desc2} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, ongrid_desc2: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald min-h-[60px]" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* HIBRIDO */}
+            <div className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4">
+              <h4 className="text-sm font-bold text-slate-700 border-b border-slate-200 pb-2">Sistema Híbrido</h4>
+              
+              <div className="flex flex-col md:flex-row gap-6">
+                {/* Imagem Hibrido */}
+                <div className="w-full md:w-1/3 flex flex-col gap-2">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Foto Híbrido</label>
+                  <div className="aspect-video bg-white border border-slate-200 rounded-lg p-1 flex flex-col items-center justify-center relative overflow-hidden">
+                    {uploadingImageId === 'hibrido_img' ? (
+                      <Loader2 className="w-6 h-6 text-brand-emerald animate-spin" />
+                    ) : (
+                      <>
+                        <img src={instalacaoPageData.hibrido_image} alt="Híbrido" className="w-full h-full object-cover rounded" />
+                        <label className="absolute inset-0 bg-slate-900/60 text-white text-[10px] font-bold opacity-0 hover:opacity-100 flex flex-col justify-center items-center cursor-pointer transition-opacity">
+                          <Upload className="w-4 h-4 mb-1" /> Trocar Foto
+                          <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setInstalacaoPageData({ ...instalacaoPageData, hibrido_image: url }), 'hibrido_img')} />
+                        </label>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="w-full md:w-2/3 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Badge</label>
+                      <input type="text" value={instalacaoPageData.hibrido_badge} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, hibrido_badge: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título 1 (Preto)</label>
+                      <input type="text" value={instalacaoPageData.hibrido_title1} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, hibrido_title1: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título 2 (Destaque Laranja)</label>
+                      <input type="text" value={instalacaoPageData.hibrido_title2} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, hibrido_title2: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título 3 (Preto Opcional)</label>
+                      <input type="text" value={instalacaoPageData.hibrido_title3} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, hibrido_title3: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald" />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Parágrafo 1</label>
+                    <textarea value={instalacaoPageData.hibrido_desc1} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, hibrido_desc1: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald min-h-[60px]" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Parágrafo 2</label>
+                    <textarea value={instalacaoPageData.hibrido_desc2} onChange={(e) => setInstalacaoPageData({ ...instalacaoPageData, hibrido_desc2: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald min-h-[60px]" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 flex justify-end">
+              <button onClick={() => handleSave('instalacao_page', instalacaoPageData)} disabled={saving} className="bg-brand-emerald hover:bg-emerald-600 disabled:bg-slate-300 text-white font-bold px-5 py-2.5 rounded-lg text-xs flex items-center gap-2 cursor-pointer shadow-sm transition-all">
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Salvar Página Solar
               </button>
             </div>
           </div>

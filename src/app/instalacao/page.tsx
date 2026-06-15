@@ -9,6 +9,22 @@ import LeadForm from '@/components/LeadForm';
 import Footer from '@/components/Footer';
 import SolarCalculatorPortal from '@/components/SolarCalculatorPortal';
 import { getAllSiteSettingsAction } from '@/app/actions/settings';
+const DEFAULT_INSTALACAO_PAGE = {
+  ongrid_badge: 'Conectado à Rede',
+  ongrid_title1: 'Sistemas',
+  ongrid_title2: 'On-Grid',
+  ongrid_desc1: 'O sistema on-grid é a solução ideal para quem busca economia imediata conectada à rede elétrica tradicional. Toda a energia solar captada pelos painéis é consumida diretamente pelo seu imóvel, e o excedente produzido é injetado na rede da concessionária local, transformando-se em créditos valiosos para a sua fatura.',
+  ongrid_desc2: 'Quando o sol se põe ou em dias de baixa irradiação, você continua utilizando a energia da rede pública normalmente, garantindo um abastecimento contínuo e sem interrupções.',
+  ongrid_image: '/images/sistema_ongrid.png',
+
+  hibrido_badge: 'Armazenamento Próprio',
+  hibrido_title1: 'Sistemas',
+  hibrido_title2: 'Híbridos',
+  hibrido_title3: 'e Backup',
+  hibrido_desc1: 'Tenha o melhor dos dois mundos. O sistema híbrido une a praticidade e os créditos da conexão com a rede pública à segurança do armazenamento próprio através de baterias modernas.',
+  hibrido_desc2: 'Além de reduzir sua conta de luz exportando a energia excedente, parte da produção é armazenada para garantir o funcionamento da sua casa ou empresa durante a noite ou em casos de apagões e falhas no fornecimento da concessionária. Máxima autonomia, segurança e flexibilidade para o seu dia a dia.',
+  hibrido_image: '/images/sistema_hibrido.png'
+};
 
 export default async function InstalacaoPage() {
   const settingsRes = await getAllSiteSettingsAction();
@@ -28,7 +44,10 @@ export default async function InstalacaoPage() {
     ]
   };
 
+  };
+
   const testimonialsData = settings?.testimonials || [];
+  const instalacaoPage = settings?.instalacao_page || DEFAULT_INSTALACAO_PAGE;
 
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center relative overflow-hidden">
@@ -112,22 +131,22 @@ export default async function InstalacaoPage() {
           <div className="flex flex-col md:flex-row gap-10 items-center">
             <div className="w-full md:w-1/2 order-2 md:order-1 space-y-5">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-emerald/10 border border-brand-emerald/20 text-brand-emerald text-sm font-bold uppercase tracking-wider mb-2">
-                Conectado à Rede
+                {instalacaoPage.ongrid_badge}
               </div>
               <h3 className="text-3xl md:text-4xl font-bold text-brand-navy dark:text-white font-montserrat tracking-tight">
-                Sistemas <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-emerald to-emerald-400">On-Grid</span>
+                {instalacaoPage.ongrid_title1} <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-emerald to-emerald-400">{instalacaoPage.ongrid_title2}</span>
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
-                O sistema on-grid é a solução ideal para quem busca economia imediata conectada à rede elétrica tradicional. Toda a energia solar captada pelos painéis é consumida diretamente pelo seu imóvel, e o excedente produzido é injetado na rede da concessionária local, transformando-se em créditos valiosos para a sua fatura.
+                {instalacaoPage.ongrid_desc1}
               </p>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
-                Quando o sol se põe ou em dias de baixa irradiação, você continua utilizando a energia da rede pública normalmente, garantindo um abastecimento contínuo e sem interrupções.
+                {instalacaoPage.ongrid_desc2}
               </p>
             </div>
             <div className="w-full md:w-1/2 order-1 md:order-2">
               <div className="aspect-video rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 relative group">
                 <div className="absolute inset-0 bg-brand-navy/10 group-hover:bg-transparent transition-colors duration-500 z-10" />
-                <img src="/images/sistema_ongrid.png" alt="Sistema On-Grid" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <img src={instalacaoPage.ongrid_image} alt={instalacaoPage.ongrid_title2} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               </div>
             </div>
           </div>
@@ -136,22 +155,22 @@ export default async function InstalacaoPage() {
           <div className="flex flex-col md:flex-row-reverse gap-10 items-center">
             <div className="w-full md:w-1/2 order-2 md:order-1 space-y-5">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-sm font-bold uppercase tracking-wider mb-2">
-                Armazenamento Próprio
+                {instalacaoPage.hibrido_badge}
               </div>
               <h3 className="text-3xl md:text-4xl font-bold text-brand-navy dark:text-white font-montserrat tracking-tight">
-                Sistemas <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-yellow-500">Híbridos</span> e Backup
+                {instalacaoPage.hibrido_title1} <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-yellow-500">{instalacaoPage.hibrido_title2}</span> {instalacaoPage.hibrido_title3}
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
-                Tenha o melhor dos dois mundos. O sistema híbrido une a praticidade e os créditos da conexão com a rede pública à segurança do armazenamento próprio através de baterias modernas.
+                {instalacaoPage.hibrido_desc1}
               </p>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
-                Além de reduzir sua conta de luz exportando a energia excedente, parte da produção é armazenada para garantir o funcionamento da sua casa ou empresa durante a noite ou em casos de apagões e falhas no fornecimento da concessionária. Máxima autonomia, segurança e flexibilidade para o seu dia a dia.
+                {instalacaoPage.hibrido_desc2}
               </p>
             </div>
             <div className="w-full md:w-1/2 order-1 md:order-2">
               <div className="aspect-video rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 relative group">
                 <div className="absolute inset-0 bg-brand-navy/10 group-hover:bg-transparent transition-colors duration-500 z-10" />
-                <img src="/images/sistema_hibrido.png" alt="Sistema Híbrido com Backup" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <img src={instalacaoPage.hibrido_image} alt={instalacaoPage.hibrido_title2} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               </div>
             </div>
           </div>
