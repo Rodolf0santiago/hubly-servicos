@@ -31,11 +31,12 @@ import {
 } from 'lucide-react';
 
 const ETAPAS = [
-  { id: 'planejamento', label: 'Planejamento / Projeto', color: 'bg-blue-50 text-blue-600 border-blue-200' },
-  { id: 'agendamento', label: 'Agendamento', color: 'bg-orange-50 text-orange-600 border-orange-200' },
-  { id: 'execucao', label: 'Em Execução', color: 'bg-indigo-50 text-indigo-600 border-indigo-200' },
-  { id: 'vistoria', label: 'Vistoria / Testes', color: 'bg-amber-50 text-amber-600 border-amber-200' },
-  { id: 'finalizado', label: 'Finalizado', color: 'bg-emerald-50 text-emerald-600 border-emerald-200' }
+  { id: 'analise_tecnica', label: 'Análise Técnica / Viabilidade', color: 'bg-slate-100 text-slate-700 border-slate-300' },
+  { id: 'orcamento', label: 'Aguardando Aprovação / Orçamento', color: 'bg-blue-50 text-blue-600 border-blue-200' },
+  { id: 'agendamento', label: 'Agendamento / Logística', color: 'bg-orange-50 text-orange-600 border-orange-200' },
+  { id: 'execucao', label: 'Em Execução / Instalação', color: 'bg-indigo-50 text-indigo-600 border-indigo-200' },
+  { id: 'vistoria', label: 'Vistoria / Homologação', color: 'bg-amber-50 text-amber-600 border-amber-200' },
+  { id: 'finalizado', label: 'Finalizado & Avaliado', color: 'bg-emerald-50 text-emerald-600 border-emerald-200' }
 ];
 
 const DEFAULT_TEMPLATES = {
@@ -122,16 +123,34 @@ export default function AdminServiceTrackings() {
       servico: servicesConfig[0].title,
       empresa_id: '',
       empresa_nome: '',
-      etapa: 'planejamento',
+      etapa: 'analise_tecnica',
       data_inicio: new Date().toISOString().split('T')[0],
       data_previsao: '',
-      observacoes: ''
+      observacoes: '',
+      avaliacao: {
+        qualidade_servicos: 0,
+        cumprimento_prazos: 0,
+        organizacao: 0,
+        atendimento: 0,
+        pos_venda: 0,
+        feedback_clientes: 0
+      }
     });
     setIsEditModalOpen(true);
   };
 
   const handleOpenEdit = (tracking: ServiceTracking) => {
-    setEditingTracking({ ...tracking });
+    setEditingTracking({ 
+      ...tracking,
+      avaliacao: tracking.avaliacao || {
+        qualidade_servicos: 0,
+        cumprimento_prazos: 0,
+        organizacao: 0,
+        atendimento: 0,
+        pos_venda: 0,
+        feedback_clientes: 0
+      }
+    });
     setIsEditModalOpen(true);
   };
 
@@ -164,6 +183,14 @@ export default function AdminServiceTrackings() {
     if (!editingTracking.empresa_nome.trim()) {
       alert('Selecione uma Empresa Responsável!');
       return;
+    }
+
+    if (editingTracking.etapa === 'finalizado') {
+      const av = editingTracking.avaliacao;
+      if (!av || !av.qualidade_servicos || !av.cumprimento_prazos || !av.organizacao || !av.atendimento || !av.pos_venda || !av.feedback_clientes) {
+        alert('Para finalizar o serviço, por favor preencha todas as notas de avaliação do parceiro!');
+        return;
+      }
     }
 
     try {
@@ -733,6 +760,51 @@ export default function AdminServiceTrackings() {
                   />
                 </div>
               </div>
+
+              {/* Seção 4: Avaliação do Serviço (Exibida apenas se finalizado) */}
+              {editingTracking.etapa === 'finalizado' && (
+                <div className="space-y-4 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+                  <h4 className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest border-b border-emerald-100 pb-1">4. Avaliação do Serviço Prestado</h4>
+                  <p className="text-[10px] text-slate-500 mb-2">Estas notas irão compor automaticamente o <strong>Quality Score</strong> da empresa homologada no sistema.</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {[
+                      { key: 'qualidade_servicos', label: 'Qualidade Técnica do Serviço' },
+                      { key: 'cumprimento_prazos', label: 'Cumprimento de Prazos' },
+                      { key: 'organizacao', label: 'Organização e Limpeza' },
+                      { key: 'atendimento', label: 'Atendimento ao Cliente' },
+                      { key: 'pos_venda', label: 'Pós-Venda / Suporte' },
+                      { key: 'feedback_clientes', label: 'Feedback Final do Cliente' }
+                    ].map(metric => (
+                      <div key={metric.key} className="space-y-1 bg-white p-3 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <label className="text-[10px] font-bold text-slate-600">{metric.label}</label>
+                        <select
+                          required={editingTracking.etapa === 'finalizado'}
+                          value={editingTracking.avaliacao?.[metric.key as keyof typeof editingTracking.avaliacao] || 0}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            setEditingTracking({
+                              ...editingTracking,
+                              avaliacao: {
+                                ...(editingTracking.avaliacao || {}),
+                                [metric.key]: val
+                              }
+                            });
+                          }}
+                          className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded focus:outline-none focus:border-brand-emerald bg-slate-50"
+                        >
+                          <option value={0}>Selecione uma nota...</option>
+                          <option value={1}>⭐ 1 - Muito Ruim</option>
+                          <option value={2}>⭐⭐ 2 - Ruim</option>
+                          <option value={3}>⭐⭐⭐ 3 - Regular</option>
+                          <option value={4}>⭐⭐⭐⭐ 4 - Bom</option>
+                          <option value={5}>⭐⭐⭐⭐⭐ 5 - Excelente</option>
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </form>
 
             {/* Footer Modal */}

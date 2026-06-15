@@ -877,6 +877,7 @@ export default function AdminCompanies() {
               {/* Seção Nova: Desempenho e Avaliações */}
               <div className="space-y-3">
                 <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-1">Desempenho e Qualidade (0 a 5 Estrelas)</h4>
+                <p className="text-[10px] text-slate-500 italic">Essas notas são calculadas automaticamente com base nas avaliações dos serviços finalizados na aba "Acompanhamento".</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {[
                     { key: 'qualidade_servicos', label: 'Qualidade dos Serviços' },
@@ -897,11 +898,9 @@ export default function AdminCompanies() {
                         max="5"
                         step="0.1"
                         value={editingCompany.metricas?.[metric.key as keyof typeof editingCompany.metricas] as number || 0}
-                        onChange={(e) => setEditingCompany({
-                          ...editingCompany,
-                          metricas: { ...editingCompany.metricas, [metric.key]: parseFloat(e.target.value) } as any
-                        })}
-                        className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-brand-emerald"
+                        readOnly
+                        disabled
+                        className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-not-allowed accent-slate-400"
                       />
                     </div>
                   ))}

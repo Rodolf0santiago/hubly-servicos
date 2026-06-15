@@ -135,17 +135,26 @@ export async function recalcularScoreEmpresa(empresa_id: string): Promise<void> 
     if (cIndex < 0) return;
     const company = companies[cIndex];
 
-    const leadsRes = await getLeadsAction();
-    if (!leadsRes.success || !leadsRes.data) return;
-    const leads = leadsRes.data.filter(l => l.empresa_executora_id === empresa_id && l.avaliacao_parceiro);
+    const trackingsRes = await supabaseAdmin
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'service_trackings')
+      .maybeSingle();
 
-    if (leads.length === 0) return;
+    let trackings: import('@/types').ServiceTracking[] = [];
+    if (trackingsRes.data && trackingsRes.data.value) {
+      trackings = trackingsRes.data.value as import('@/types').ServiceTracking[];
+    }
+
+    const companyTrackings = trackings.filter(t => t.empresa_id === empresa_id && t.etapa === 'finalizado' && t.avaliacao);
+
+    if (companyTrackings.length === 0) return;
 
     let validCount = 0;
     const totals = { qs: 0, cp: 0, org: 0, att: 0, pv: 0, fc: 0 };
 
-    leads.forEach(l => {
-      const av = l.avaliacao_parceiro;
+    companyTrackings.forEach(t => {
+      const av = t.avaliacao;
       if (av) {
         totals.qs += Number(av.qualidade_servicos) || 0;
         totals.cp += Number(av.cumprimento_prazos) || 0;

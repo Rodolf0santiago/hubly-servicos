@@ -100,9 +100,17 @@ export interface ServiceTracking {
   empresa_nome: string;
   empresa_whatsapp?: string;
   empresa_email?: string;
-  etapa: 'planejamento' | 'agendamento' | 'execucao' | 'vistoria' | 'finalizado';
+  etapa: 'analise_tecnica' | 'orcamento' | 'agendamento' | 'execucao' | 'vistoria' | 'finalizado';
   data_inicio?: string;
   data_previsao?: string;
   observacoes?: string;
+  avaliacao?: {
+    qualidade_servicos?: number;
+    cumprimento_prazos?: number;
+    organizacao?: number;
+    atendimento?: number;
+    pos_venda?: number;
+    feedback_clientes?: number;
+  };
 }
 

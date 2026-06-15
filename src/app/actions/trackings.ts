@@ -5,6 +5,7 @@ import { ServiceTracking } from '@/types';
 import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/auth-token';
 import { revalidatePath } from 'next/cache';
+import { recalcularScoreEmpresa } from './companies';
 
 async function verifyAdminSession(): Promise<boolean> {
   try {
@@ -80,6 +81,11 @@ export async function saveTrackingAction(tracking: ServiceTracking): Promise<{ s
       throw new Error(error.message);
     }
 
+    // Call recalculate
+    if (tracking.empresa_id) {
+      await recalcularScoreEmpresa(tracking.empresa_id);
+    }
+
     revalidatePath('/admin');
     return { success: true };
   } catch (error: any) {
@@ -103,6 +109,10 @@ export async function deleteTrackingAction(id: string): Promise<{ success: boole
       throw new Error(res.error || 'Erro ao carregar a lista de acompanhamentos.');
     }
 
+    // Find the company id before deleting so we can recalculate
+    const trackingToDelete = (res.data || []).find(t => t.id === id);
+    const empresa_id = trackingToDelete?.empresa_id;
+
     const filteredList = (res.data || []).filter(t => t.id !== id);
 
     const { error } = await supabaseAdmin
@@ -112,6 +122,10 @@ export async function deleteTrackingAction(id: string): Promise<{ success: boole
     if (error) {
       console.error('Error deleting tracking:', error);
       throw new Error(error.message);
+    }
+
+    if (empresa_id) {
+      await recalcularScoreEmpresa(empresa_id);
     }
 
     revalidatePath('/admin');

@@ -60,8 +60,8 @@ export default function CompanyMetricsShowcase() {
         </div>
 
         {/* Right: Scroll Animation */}
-        {/* h-[150vh] gives extra space to scroll while keeping the element sticky */}
-        <div ref={containerRef} className="w-full xl:w-7/12 h-[120vh] xl:h-[150vh] relative">
+        {/* h-[90vh] gives extra space to scroll while keeping the element sticky sem criar um buraco gigante no layout */}
+        <div ref={containerRef} className="w-full xl:w-7/12 h-[70vh] xl:h-[90vh] relative">
           <div className="sticky top-32 w-full aspect-video md:aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-center bg-slate-200 dark:bg-slate-800">
             
             {/* Primeira Imagem (Fundo) */}
