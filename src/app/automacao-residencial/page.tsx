@@ -4,6 +4,7 @@ import { ArrowLeft, ShieldCheck, Cpu, ArrowRight } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import TrustSection from '@/components/TrustSection';
 import Testimonials from '@/components/Testimonials';
+import GaleriaSection from '@/components/GaleriaSection';
 import LeadForm from '@/components/LeadForm';
 import Footer from '@/components/Footer';
 import { getAllSiteSettingsAction } from '@/app/actions/settings';
@@ -108,6 +109,7 @@ export default async function AutomacaoResidencialPage() {
         </div>
       </div>
 
+      <GaleriaSection servico="automacao_residencial" />
       <Testimonials serviceId="automacao_residencial" data={testimonialsData} />
       <LeadForm defaultService={service.title} />
       <Footer />

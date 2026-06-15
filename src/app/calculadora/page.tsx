@@ -4,6 +4,7 @@ import { ArrowLeft, ShieldCheck, ArrowRight } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import TrustSection from '@/components/TrustSection';
 import Testimonials from '@/components/Testimonials';
+import GaleriaSection from '@/components/GaleriaSection';
 import LeadForm from '@/components/LeadForm';
 import Footer from '@/components/Footer';
 import { getAllSiteSettingsAction } from '@/app/actions/settings';
@@ -76,6 +77,7 @@ export default async function CalculadoraPage() {
       </section>
 
       <TrustSection data={settings?.trust} />
+      <GaleriaSection servico="limpeza_solar" />
       <Testimonials serviceId="limpeza_solar" data={testimonialsData} />
       <LeadForm defaultService="Limpeza Técnica de Placas" />
       <Footer />

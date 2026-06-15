@@ -4,6 +4,7 @@ import { ArrowLeft, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import TrustSection from '@/components/TrustSection';
 import Testimonials from '@/components/Testimonials';
+import GaleriaSection from '@/components/GaleriaSection';
 import LeadForm from '@/components/LeadForm';
 import Footer from '@/components/Footer';
 import SolarCalculatorPortal from '@/components/SolarCalculatorPortal';
@@ -104,6 +105,7 @@ export default async function InstalacaoPage() {
         </div>
       </div>
 
+      <GaleriaSection servico="instalacao_manutencao" />
       <Testimonials serviceId="instalacao_manutencao" data={testimonialsData} />
       <LeadForm defaultService="Instalação e Manutenção" />
       <Footer />

@@ -4,6 +4,7 @@ import { ArrowLeft, ShieldCheck, ThermometerSun, ArrowRight } from 'lucide-react
 import { ThemeToggle } from '@/components/ThemeToggle';
 import TrustSection from '@/components/TrustSection';
 import Testimonials from '@/components/Testimonials';
+import GaleriaSection from '@/components/GaleriaSection';
 import LeadForm from '@/components/LeadForm';
 import Footer from '@/components/Footer';
 import { getAllSiteSettingsAction } from '@/app/actions/settings';
@@ -108,6 +109,7 @@ export default async function AquecimentoPage() {
         </div>
       </div>
 
+      <GaleriaSection servico="aquecimento_piso" />
       <Testimonials serviceId="aquecimento_piso" data={testimonialsData} />
       <LeadForm defaultService="Aquecimento de Piso Premium" />
       <Footer />

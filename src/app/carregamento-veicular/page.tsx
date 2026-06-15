@@ -5,6 +5,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import TrustSection from '@/components/TrustSection';
 import EVCalculator from '@/components/EVCalculator';
 import Testimonials from '@/components/Testimonials';
+import GaleriaSection from '@/components/GaleriaSection';
 import LeadForm from '@/components/LeadForm';
 import Footer from '@/components/Footer';
 import { getAllSiteSettingsAction } from '@/app/actions/settings';
@@ -111,6 +112,7 @@ export default async function CarregamentoVeicularPage() {
         </div>
       </div>
 
+      <GaleriaSection servico="carregamento_veicular" />
       <Testimonials serviceId="carregamento_veicular" data={testimonialsData} />
       <LeadForm defaultService={service.title} />
       <Footer />
