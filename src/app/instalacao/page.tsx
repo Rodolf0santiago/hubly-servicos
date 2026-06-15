@@ -44,7 +44,6 @@ export default async function InstalacaoPage() {
     ]
   };
 
-  };
 
   const testimonialsData = settings?.testimonials || [];
   const instalacaoPage = settings?.instalacao_page || DEFAULT_INSTALACAO_PAGE;
