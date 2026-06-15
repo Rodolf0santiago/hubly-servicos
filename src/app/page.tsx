@@ -26,7 +26,7 @@ export default async function Home() {
       
       <header className="absolute top-0 w-full px-6 py-6 md:px-12 md:py-8 flex justify-between items-center z-50">
         <Link href="/" className="flex items-center group cursor-pointer">
-          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-24 md:h-32 lg:h-36 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105" />
+          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-[5.5rem] sm:h-28 md:h-32 lg:h-36 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105 dark:bg-white/95 dark:px-4 dark:py-2 dark:rounded-2xl dark:shadow-sm" />
         </Link>
         <div className="flex items-center gap-3 md:gap-8 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md px-3 py-2 md:px-6 md:py-3 rounded-full border border-slate-200/50 dark:border-slate-800/50">
           <Link href="/como-funciona" className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-brand-emerald/10 hover:bg-brand-emerald/20 text-brand-emerald dark:text-emerald-400 border border-brand-emerald/20 rounded-full text-xs sm:text-sm md:text-base font-semibold whitespace-nowrap transition-all">
