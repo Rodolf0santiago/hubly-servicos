@@ -39,7 +39,7 @@ export default async function InstalacaoPage() {
     differentials: [
       "Projetos assinados por Engenheiros Homologados",
       "Uso de materiais de primeira linha (Tier 1)",
-      "Pós-venda e monitoramento ativo pela Hubly Pro",
+      "Pós-venda e monitoramento ativo pela Integra Soluções SC",
       "Instalação rápida e com limpeza total"
     ]
   };
@@ -59,10 +59,8 @@ export default async function InstalacaoPage() {
 
       <header className="absolute top-0 w-full px-4 py-4 md:px-8 md:py-6 flex justify-between items-center z-50">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-brand-emerald rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <span className="text-white font-black text-xl">H</span>
-          </div>
-          <span className="font-montserrat font-black text-brand-navy dark:text-white text-xl tracking-tight">Hubly Pro</span>
+          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-10 md:h-12 w-auto object-contain" />
+          <span className="font-montserrat font-black text-brand-navy dark:text-white text-xl tracking-tight">Integra Soluções SC</span>
         </div>
         <ThemeToggle />
       </header>

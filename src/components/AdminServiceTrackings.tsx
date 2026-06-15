@@ -40,9 +40,9 @@ const ETAPAS = [
 
 const DEFAULT_TEMPLATES = {
   avisar_etapa: "Olá {cliente}! Passando para informar que o andamento do seu serviço de '{servico}' (realizado pela nossa empresa parceira homologada {empresa}) avançou para a etapa: '{etapa}'. Qualquer dúvida, conte conosco!",
-  cobrar_empresa: "Olá {responsavel} da {empresa}! Aqui é da equipe Hubly Pro. Estamos acompanhando o serviço de '{servico}' para o cliente {cliente} e gostaríamos de solicitar uma atualização sobre a etapa atual: '{etapa}'. Como está o andamento? Há alguma pendência?",
-  cobrar_cliente: "Olá {cliente}! Aqui é do Hubly Pro. Gostaríamos de avisar que precisamos de um retorno/ação sua para avançarmos com o serviço de '{servico}' (prestado pela {empresa}) na etapa '{etapa}'. Por favor, entre em contato quando puder. Obrigado!",
-  avisar_conclusao: "Olá {cliente}! Temos o prazer de informar que o seu serviço de '{servico}' realizado pela empresa homologada {empresa} foi concluído com sucesso! 🎉 Agradecemos pela confiança no Hubly Pro.",
+  cobrar_empresa: "Olá {responsavel} da {empresa}! Aqui é da equipe Integra Soluções SC. Estamos acompanhando o serviço de '{servico}' para o cliente {cliente} e gostaríamos de solicitar uma atualização sobre a etapa atual: '{etapa}'. Como está o andamento? Há alguma pendência?",
+  cobrar_cliente: "Olá {cliente}! Aqui é do Integra Soluções SC. Gostaríamos de avisar que precisamos de um retorno/ação sua para avançarmos com o serviço de '{servico}' (prestado pela {empresa}) na etapa '{etapa}'. Por favor, entre em contato quando puder. Obrigado!",
+  avisar_conclusao: "Olá {cliente}! Temos o prazer de informar que o seu serviço de '{servico}' realizado pela empresa homologada {empresa} foi concluído com sucesso! 🎉 Agradecemos pela confiança no Integra Soluções SC.",
   feedback: "Olá {cliente}! Como o seu serviço de '{servico}' com a {empresa} foi finalizado, gostaríamos muito de saber como foi a sua experiência. O seu feedback nos ajuda a manter o alto padrão de qualidade das nossas empresas homologadas! Como você avalia o serviço prestado?"
 };
 
@@ -326,7 +326,7 @@ export default function AdminServiceTrackings() {
       alert('E-mail não cadastrado!');
       return;
     }
-    const subject = `Acompanhamento de Serviço Hubly Pro: ${selectedTracking.servico}`;
+    const subject = `Acompanhamento de Serviço Integra Soluções SC: ${selectedTracking.servico}`;
     const url = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(customMsgText)}`;
     window.open(url, '_blank');
   };

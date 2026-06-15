@@ -660,7 +660,7 @@ export default function AdminCompanies() {
               {/* Seção 4: Serviços Prestados */}
               <div className="space-y-3">
                 <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-1">Serviços Prestados</h4>
-                <p className="text-[10px] text-slate-400">Selecione todos os serviços que esta empresa está autorizada a realizar através do Hubly Pro.</p>
+                <p className="text-[10px] text-slate-400">Selecione todos os serviços que esta empresa está autorizada a realizar através do Integra Soluções SC.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 bg-slate-50 p-4 rounded-xl border border-slate-200/50">
                   {servicesConfig.map(s => {
                     const isChecked = editingCompany.servicos.includes(s.id);

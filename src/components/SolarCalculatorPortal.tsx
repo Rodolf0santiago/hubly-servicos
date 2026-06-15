@@ -89,7 +89,7 @@ export default function SolarCalculatorPortal() {
     } catch (err) {
       console.error('Erro ao buscar whatsapp do CMS na calculadora:', err);
     }
-    const msg = `Olá! Fiz uma simulação na Hubly Pro e meu potencial de economia solar é de *${fmt(result.economiaA)}/ano* com um sistema de *${result.potencia} kWp*. Quero saber mais!`;
+    const msg = `Olá! Fiz uma simulação na Integra Soluções SC e meu potencial de economia solar é de *${fmt(result.economiaA)}/ano* com um sistema de *${result.potencia} kWp*. Quero saber mais!`;
     window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
@@ -100,7 +100,7 @@ export default function SolarCalculatorPortal() {
       <div className="flex-1 text-center lg:text-left space-y-8">
         <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-emerald/10 text-brand-emerald text-xs font-black uppercase tracking-[0.2em] border border-brand-emerald/20">
-          <Zap className="w-4 h-4 fill-brand-emerald" /> Hubly Pro Solar
+          <Zap className="w-4 h-4 fill-brand-emerald" /> Integra Soluções SC Solar
         </motion.div>
 
         <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}

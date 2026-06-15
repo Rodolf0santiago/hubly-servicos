@@ -138,7 +138,7 @@ export default function AdminSecurity() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="exemplo@hubly.com"
+                    placeholder="exemplo@integra.com"
                     className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500/30 transition-all font-medium"
                   />
                 </div>
@@ -296,7 +296,7 @@ export default function AdminSecurity() {
 
           {/* Footer Text */}
           <div className="text-center pt-2 text-[10px] text-slate-500 border-t border-slate-800/80 font-medium font-mono">
-            Hubly CRM • Painel de Segurança
+            Integra CRM • Painel de Segurança
           </div>
         </div>
       </div>

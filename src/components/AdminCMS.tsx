@@ -66,7 +66,7 @@ const DEFAULT_SERVICES = [
     differentials: [
       'Projetos assinados por Engenheiros Homologados',
       'Uso de materiais de primeira linha (Tier 1)',
-      'Pós-venda e monitoramento ativo pela Hubly Pro',
+      'Pós-venda e monitoramento ativo pela Integra Soluções SC',
       'Instalação rápida e com limpeza total'
     ],
     hidden: false
@@ -94,14 +94,14 @@ const DEFAULT_SERVICES = [
     image: '/images/aquecimento.png',
     icon: 'ThermometerSun',
     href: '/aquecimento',
-    description: 'O máximo conforto térmico para sua casa com tecnologia de ponta e instalação auditada pela Hubly Pro.',
+    description: 'O máximo conforto térmico para sua casa com tecnologia de ponta e instalação auditada pela Integra Soluções SC.',
     subpage_image: '/images/aquecimento.png',
     differentials_title: 'Diferenciais do Hub:',
     differentials: [
       'Sistemas de alta eficiência e baixo consumo',
       'Instalação especializada sem sujeira',
       'Controle total via smartphone',
-      'Garantia estendida via Hubly Pro'
+      'Garantia estendida via Integra Soluções SC'
     ],
     hidden: false
   },
@@ -170,7 +170,7 @@ const DEFAULT_TESTIMONIALS = [
   },
   {
     id: 2,
-    text: "Instalação impecável. Tudo organizado, cabos bem passados e suporte nota 10. O Hubly Pro realmente seleciona as melhores empresas, me senti muito seguro durante todo o processo.",
+    text: "Instalação impecável. Tudo organizado, cabos bem passados e suporte nota 10. O Integra Soluções SC realmente seleciona as melhores empresas, me senti muito seguro durante todo o processo.",
     service: "Instalação de Energia Solar",
     serviceId: "instalacao_manutencao",
     name: "Mariana Souza",
@@ -188,7 +188,7 @@ const DEFAULT_TESTIMONIALS = [
   },
   {
     id: 4,
-    text: "O sistema tinha perdido quase 20% de eficiência. Após a limpeza técnica da Hubly Pro, os números voltaram ao normal no mesmo dia. Investimento que se paga muito rápido.",
+    text: "O sistema tinha perdido quase 20% de eficiência. Após a limpeza técnica da Integra Soluções SC, os números voltaram ao normal no mesmo dia. Investimento que se paga muito rápido.",
     service: "Limpeza Técnica de Placas",
     serviceId: "limpeza_solar",
     name: "Ricardo Mendes",
@@ -197,7 +197,7 @@ const DEFAULT_TESTIMONIALS = [
   },
   {
     id: 5,
-    text: "Excelente atendimento do início ao fim. A equipe de instalação foi muito pontual e o sistema está funcionando perfeitamente. O acompanhamento da Hubly faz toda a diferença.",
+    text: "Excelente atendimento do início ao fim. A equipe de instalação foi muito pontual e o sistema está funcionando perfeitamente. O acompanhamento da Integra faz toda a diferença.",
     service: "Instalação de Energia Solar",
     serviceId: "instalacao_manutencao",
     name: "Felipe Oliveira",
@@ -218,8 +218,8 @@ const DEFAULT_TESTIMONIALS = [
 const DEFAULT_TRUST = {
   badge: "Qualidade Homologada",
   title_part1: "POR QUE CONTRATAR",
-  title_part2: "VIA HUBLY PRO?",
-  description: "Diferente de contratar uma empresa direto no escuro, o Hubly Pro é a sua camada de proteção absoluta. Selecionamos apenas a elite do mercado.",
+  title_part2: "VIA Integra Soluções SC?",
+  description: "Diferente de contratar uma empresa direto no escuro, o Integra Soluções SC é a sua camada de proteção absoluta. Selecionamos apenas a elite do mercado.",
   certified_title: "Certificado de Homologação",
   certified_desc: "Apenas 15% das empresas que aplicam são aprovadas em nosso processo de auditoria.",
   steps: [
@@ -229,7 +229,7 @@ const DEFAULT_TRUST = {
     },
     {
       title: "Garantia de Qualidade",
-      description: "A Hubly Pro audita os projetos para garantir que a instalação siga as normas técnicas e de segurança."
+      description: "A Integra Soluções SC audita os projetos para garantir que a instalação siga as normas técnicas e de segurança."
     },
     {
       title: "Melhor Negociação",
@@ -913,7 +913,7 @@ export default function AdminCMS() {
         {subTab === 'trust' && (
           <div className="space-y-6">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 mb-1">Por que Hubly Pro (Seção de Confiança)</h3>
+              <h3 className="text-sm font-bold text-slate-900 mb-1">Por que Integra Soluções SC (Seção de Confiança)</h3>
               <p className="text-xs text-slate-500">Configure os títulos da seção com fundo escuro e os 3 passos de triagem.</p>
             </div>
 

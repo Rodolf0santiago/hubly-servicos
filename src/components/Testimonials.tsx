@@ -28,7 +28,7 @@ const testimonials: Testimonial[] = [
   },
   {
     id: 4,
-    text: "O sistema tinha perdido quase 20% de eficiência. Após a limpeza técnica da Hubly Pro, os números voltaram ao normal no mesmo dia. Investimento que se paga muito rápido.",
+    text: "O sistema tinha perdido quase 20% de eficiência. Após a limpeza técnica da Integra Soluções SC, os números voltaram ao normal no mesmo dia. Investimento que se paga muito rápido.",
     service: "Limpeza Técnica de Placas",
     serviceId: "limpeza_solar",
     name: "Ricardo Mendes",
@@ -38,7 +38,7 @@ const testimonials: Testimonial[] = [
   // Instalação
   {
     id: 2,
-    text: "Instalação impecável. Tudo organizado, cabos bem passados e suporte nota 10. O Hubly Pro realmente seleciona as melhores empresas, me senti muito seguro durante todo o processo.",
+    text: "Instalação impecável. Tudo organizado, cabos bem passados e suporte nota 10. O Integra Soluções SC realmente seleciona as melhores empresas, me senti muito seguro durante todo o processo.",
     service: "Instalação de Energia Solar",
     serviceId: "instalacao_manutencao",
     name: "Mariana Souza",
@@ -47,7 +47,7 @@ const testimonials: Testimonial[] = [
   },
   {
     id: 5,
-    text: "Excelente atendimento do início ao fim. A equipe de instalação foi muito pontual e o sistema está funcionando perfeitamente. O acompanhamento da Hubly faz toda a diferença.",
+    text: "Excelente atendimento do início ao fim. A equipe de instalação foi muito pontual e o sistema está funcionando perfeitamente. O acompanhamento da Integra faz toda a diferença.",
     service: "Instalação de Energia Solar",
     serviceId: "instalacao_manutencao",
     name: "Felipe Oliveira",

@@ -16,7 +16,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Hubly Pro",
+  title: "Integra Soluções SC",
   description: "Hub dos Profissionais - Maximize sua Economia e Conforto Solar",
 };
 

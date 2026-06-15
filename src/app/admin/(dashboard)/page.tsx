@@ -355,7 +355,7 @@ function DashboardContent() {
           )}
           {activeTab === 'empresas' && (
             <>
-              <h1 className="text-xl font-black text-slate-900 tracking-tight">Empresas Homologadas (Hubly Pro)</h1>
+              <h1 className="text-xl font-black text-slate-900 tracking-tight">Empresas Homologadas (Integra Soluções SC)</h1>
               <p className="text-xs text-slate-500 mt-1">Gerencie a pontuação, documentação e auditoria das empresas homologadas.</p>
             </>
           )}

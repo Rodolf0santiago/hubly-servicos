@@ -23,11 +23,9 @@ export default async function Home() {
       
       <header className="absolute top-0 w-full px-6 py-6 md:px-12 md:py-8 flex justify-between items-center z-50">
         <div className="flex items-center gap-3 group cursor-pointer">
-          <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-brand-emerald to-emerald-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-emerald-500/30 transition-transform group-hover:scale-110">
-            <span className="text-white font-black text-2xl">H</span>
-          </div>
+          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-10 md:h-12 w-auto object-contain drop-shadow-md" />
           <div className="flex flex-col -gap-1">
-            <span className="font-montserrat font-black text-brand-navy dark:text-white text-xl md:text-2xl tracking-tighter uppercase">Hubly Pro</span>
+            <span className="font-montserrat font-black text-brand-navy dark:text-white text-xl md:text-2xl tracking-tighter uppercase">Integra Soluções SC</span>
             <span className="text-[10px] text-brand-emerald font-bold tracking-[0.2em] uppercase opacity-80">Premium Services</span>
           </div>
         </div>

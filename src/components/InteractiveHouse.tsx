@@ -26,7 +26,7 @@ const servicesData: ServiceDetail[] = [
     id: 0,
     title: "Energia Solar Residencial",
     subtitle: "Geração própria de energia limpa e renovável.",
-    description: "Economize até 95% na sua fatura de energia elétrica e proteja-se contra a inflação energética. A Hubly Pro cuida de toda a viabilidade técnica, projeto de engenharia e homologação na concessionária.",
+    description: "Economize até 95% na sua fatura de energia elétrica e proteja-se contra a inflação energética. A Integra Soluções SC cuida de toda a viabilidade técnica, projeto de engenharia e homologação na concessionária.",
     benefits: [
       "Economia imediata de até 95% na conta",
       "Retorno de investimento (Payback) rápido",
@@ -117,7 +117,7 @@ export default function InteractiveHouse() {
         {/* Title and Intro */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-emerald/10 text-brand-emerald text-xs font-bold uppercase tracking-widest mb-4 border border-brand-emerald/20">
-            Hubly Smart Home
+            Integra Smart Home
           </span>
           <h2 className="text-3xl md:text-4xl font-montserrat font-black text-brand-navy dark:text-slate-100 uppercase tracking-tighter leading-tight">
             UMA ÚNICA ENERGIA. <span className="text-brand-emerald">MÚLTIPLAS SOLUÇÕES.</span>
@@ -224,7 +224,7 @@ export default function InteractiveHouse() {
             <div className="relative w-full h-full max-w-[550px] aspect-square flex items-center justify-center">
               <img
                 src="/images/hubly_house_diagram.png"
-                alt="Diagrama Casa Eficiente Hubly"
+                alt="Diagrama Casa Eficiente Integra"
                 className="w-full h-full object-contain select-none"
               />
 

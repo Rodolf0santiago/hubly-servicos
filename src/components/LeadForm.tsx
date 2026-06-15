@@ -136,7 +136,7 @@ export default function LeadForm({ defaultService }: LeadFormProps) {
           </h2>
           <div className="w-16 h-1 bg-brand-emerald mx-auto rounded-full mt-4 mb-6" />
           <p className="text-slate-500 dark:text-slate-400 font-medium text-sm md:text-base">
-            Nossos especialistas do <strong className="text-brand-navy dark:text-white">Hubly Pro</strong> entrarão em contato em até 24h.
+            Nossos especialistas do <strong className="text-brand-navy dark:text-white">Integra Soluções SC</strong> entrarão em contato em até 24h.
           </p>
         </div>
 
@@ -227,7 +227,7 @@ export default function LeadForm({ defaultService }: LeadFormProps) {
           </button>
           
           <p className="text-center text-[10px] text-slate-400 mt-6 font-bold uppercase tracking-widest opacity-60">
-            🔒 Seus dados estão 100% seguros com o Hubly Pro
+            🔒 Seus dados estão 100% seguros com o Integra Soluções SC
           </p>
         </form>
       </motion.div>

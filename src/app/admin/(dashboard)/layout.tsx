@@ -154,10 +154,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar - Estilo Bling/Tiny */}
       <aside className="w-64 bg-[#0f172a] text-slate-300 flex flex-col hidden lg:flex fixed h-full z-20">
         <div className="p-6 flex items-center gap-3 bg-[#1e293b]/50">
-          <div className="w-8 h-8 bg-brand-emerald rounded flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <span className="text-white font-bold text-lg">H</span>
-          </div>
-          <span className="font-montserrat font-bold text-white text-lg tracking-tight">Hubly Pro</span>
+            {/* Brand */}
+            <div className="flex items-center gap-3">
+              <img src="/images/logo.png" alt="Integra Soluções SC" className="h-8 w-auto object-contain drop-shadow-md" />
+              <span className="font-montserrat font-black text-white text-lg tracking-tight hidden md:block">
+                Integra
+              </span>
+            </div>
         </div>
 
         <div className="px-4 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
@@ -210,7 +213,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             
             <div className="flex items-center gap-3">
               <div className="hidden md:block text-right">
-                <p className="text-xs font-bold text-slate-900">Hubly Pro</p>
+                <p className="text-xs font-bold text-slate-900">Integra Soluções SC</p>
                 <p className="text-[10px] text-slate-500">Plano Pro</p>
               </div>
               <div className="w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center border border-slate-200">

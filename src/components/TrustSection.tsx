@@ -13,7 +13,7 @@ const steps = [
   {
     icon: <ShieldCheck className="w-6 h-6" />,
     title: "Garantia de Qualidade",
-    description: "A Hubly Pro audita os projetos para garantir que a instalação siga as normas técnicas e de segurança."
+    description: "A Integra Soluções SC audita os projetos para garantir que a instalação siga as normas técnicas e de segurança."
   },
   {
     icon: <Zap className="w-6 h-6" />,
@@ -44,8 +44,8 @@ interface TrustSectionProps {
 export default function TrustSection({ data }: TrustSectionProps) {
   const badge = data?.badge || "Qualidade Homologada";
   const title_part1 = data?.title_part1 || "POR QUE CONTRATAR";
-  const title_part2 = data?.title_part2 || "VIA HUBLY PRO?";
-  const descriptionText = data?.description || "Diferente de contratar uma empresa direto no escuro, o Hubly Pro é a sua camada de proteção absoluta. Selecionamos apenas a elite do mercado.";
+  const title_part2 = data?.title_part2 || "VIA Integra Soluções SC?";
+  const descriptionText = data?.description || "Diferente de contratar uma empresa direto no escuro, o Integra Soluções SC é a sua camada de proteção absoluta. Selecionamos apenas a elite do mercado.";
   const certified_title = data?.certified_title || "Certificado de Homologação";
   const certified_desc = data?.certified_desc || "Apenas 15% das empresas que aplicam são aprovadas em nosso rigoroso processo de auditoria.";
 
