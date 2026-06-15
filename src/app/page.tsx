@@ -23,7 +23,7 @@ export default async function Home() {
       
       <header className="absolute top-0 w-full px-6 py-6 md:px-12 md:py-8 flex justify-between items-center z-50">
         <div className="flex items-center group cursor-pointer">
-          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-12 md:h-16 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105" />
+          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-20 md:h-24 lg:h-28 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105" />
         </div>
         <ThemeToggle />
       </header>

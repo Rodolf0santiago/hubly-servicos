@@ -156,7 +156,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="p-6 flex items-center gap-3 bg-[#1e293b]/50">
             {/* Brand */}
             <div className="flex items-center">
-              <img src="/images/logo.png" alt="Integra Soluções SC" className="h-10 w-auto object-contain drop-shadow-md" />
+              <img src="/images/logo.png" alt="Integra Soluções SC" className="h-16 w-auto object-contain drop-shadow-md" />
             </div>
         </div>
 
