@@ -29,7 +29,7 @@ export default async function Home() {
       </header>
 
       {/* Hero & Services Section - Sidebar Layout */}
-      <div className="w-full max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start justify-between pt-32 pb-20 px-6 md:px-12 gap-16 lg:gap-20">
+      <div className="w-full max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start justify-between pt-48 md:pt-64 lg:pt-[280px] pb-20 px-6 md:px-12 gap-16 lg:gap-20">
         <div className="w-full lg:w-[55%] sticky top-32">
           <Hero data={settings?.hero} />
         </div>
