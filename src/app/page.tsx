@@ -23,13 +23,13 @@ export default async function Home() {
       
       <header className="absolute top-0 w-full px-6 py-6 md:px-12 md:py-8 flex justify-between items-center z-50">
         <div className="flex items-center group cursor-pointer">
-          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-32 md:h-40 lg:h-48 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105" />
+          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-24 md:h-32 lg:h-36 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105" />
         </div>
         <ThemeToggle />
       </header>
 
       {/* Hero & Services Section - Sidebar Layout */}
-      <div className="w-full max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start justify-between pt-48 md:pt-64 lg:pt-[280px] pb-20 px-6 md:px-12 gap-16 lg:gap-20">
+      <div className="w-full max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start justify-between pt-36 md:pt-48 lg:pt-[180px] pb-20 px-6 md:px-12 gap-16 lg:gap-20">
         <div className="w-full lg:w-[55%] sticky top-32">
           <Hero data={settings?.hero} />
         </div>

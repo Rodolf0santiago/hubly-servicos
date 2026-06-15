@@ -41,11 +41,11 @@ export default function Hero({ data }: HeroProps) {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="w-full"
       >
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-emerald/10 text-brand-emerald text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-8 border border-brand-emerald/20 shadow-sm backdrop-blur-md animate-float">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-emerald/10 text-brand-emerald text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-6 border border-brand-emerald/20 shadow-sm backdrop-blur-md animate-float">
           <ShieldCheck className="w-4 h-4" /> {badge}
         </div>
 
-        <h1 className="text-4xl md:text-6xl lg:text-[5.5rem] font-montserrat font-black text-brand-navy dark:text-slate-100 leading-[0.95] mb-8 uppercase tracking-tighter">
+        <h1 className="text-4xl md:text-6xl lg:text-[5.5rem] font-montserrat font-black text-brand-navy dark:text-slate-100 leading-[0.95] mb-6 uppercase tracking-tighter">
           {title_part1} <br className="hidden lg:block" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-emerald to-emerald-400">{title_part2}</span> <br className="hidden lg:block" />
           {title_part3}
