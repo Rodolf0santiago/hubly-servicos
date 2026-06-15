@@ -62,6 +62,21 @@ export interface Company {
   projetos_concluidos: number;
   observacoes?: string;
   logo_url?: string;
+  metricas?: {
+    // Requisitos / Checklist (booleans)
+    experiencia_comprovada?: boolean;
+    regularidade_empresarial?: boolean;
+    qualificacao_tecnica?: boolean;
+    capacidade_operacional?: boolean;
+    comprometimento_qualidade?: boolean;
+    // Sistema de Pontuação (1 a 5 estrelas)
+    qualidade_servicos?: number;
+    cumprimento_prazos?: number;
+    organizacao?: number;
+    atendimento?: number;
+    pos_venda?: number;
+    feedback_clientes?: number;
+  };
 }
 
 export interface ServiceTracking {

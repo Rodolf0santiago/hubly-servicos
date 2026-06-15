@@ -21,8 +21,11 @@ import {
   Mail, 
   MapPin, 
   Award,
-  AlertCircle
+  AlertCircle,
+  LayoutDashboard,
+  List
 } from 'lucide-react';
+import AdminCompaniesDashboard from './AdminCompaniesDashboard';
 
 export default function AdminCompanies() {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -32,6 +35,9 @@ export default function AdminCompanies() {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
+  // View state
+  const [activeView, setActiveView] = useState<'lista' | 'dashboard'>('lista');
+
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('Todos');
@@ -40,6 +46,7 @@ export default function AdminCompanies() {
   // Modal de edição / cadastro
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
+  const [modalTab, setModalTab] = useState<'cadastro' | 'auditoria'>('cadastro');
 
   useEffect(() => {
     fetchCompanies();
@@ -83,13 +90,44 @@ export default function AdminCompanies() {
       rating: 4.5,
       projetos_concluidos: 0,
       observacoes: '',
-      logo_url: ''
+      logo_url: '',
+      metricas: {
+        experiencia_comprovada: false,
+        regularidade_empresarial: false,
+        qualificacao_tecnica: false,
+        capacidade_operacional: false,
+        comprometimento_qualidade: false,
+        qualidade_servicos: 0,
+        cumprimento_prazos: 0,
+        organizacao: 0,
+        atendimento: 0,
+        pos_venda: 0,
+        feedback_clientes: 0
+      }
     });
+    setModalTab('cadastro');
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (company: Company) => {
-    setEditingCompany({ ...company });
+    const companyWithMetrics = {
+      ...company,
+      metricas: company.metricas || {
+        experiencia_comprovada: false,
+        regularidade_empresarial: false,
+        qualificacao_tecnica: false,
+        capacidade_operacional: false,
+        comprometimento_qualidade: false,
+        qualidade_servicos: 0,
+        cumprimento_prazos: 0,
+        organizacao: 0,
+        atendimento: 0,
+        pos_venda: 0,
+        feedback_clientes: 0
+      }
+    };
+    setEditingCompany(companyWithMetrics);
+    setModalTab('cadastro');
     setIsModalOpen(true);
   };
 
@@ -123,6 +161,29 @@ export default function AdminCompanies() {
     try {
       setSaving(true);
       setErrorMsg('');
+
+      // Calcula score e rating automaticamente se a aba auditoria foi tocada
+      if (editingCompany.metricas) {
+        const m = editingCompany.metricas;
+        const radarAvg = (
+          (m.qualidade_servicos || 0) + 
+          (m.cumprimento_prazos || 0) + 
+          (m.organizacao || 0) + 
+          (m.atendimento || 0) + 
+          (m.pos_venda || 0) + 
+          (m.feedback_clientes || 0)
+        ) / 6;
+
+        const checks = [
+          m.experiencia_comprovada, m.regularidade_empresarial, 
+          m.qualificacao_tecnica, m.capacidade_operacional, m.comprometimento_qualidade
+        ].filter(Boolean).length;
+
+        const newScore = Math.round((radarAvg * 14) + (checks * 6));
+        editingCompany.score = newScore > 100 ? 100 : newScore;
+        editingCompany.rating = Number(radarAvg.toFixed(1));
+      }
+
       const res = await saveCompanyAction(editingCompany);
       if (res.success) {
         showSuccess('Empresa salva com sucesso!');
@@ -233,44 +294,61 @@ export default function AdminCompanies() {
 
       {/* Barra de Ações & Filtros */}
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          {/* Busca */}
-          <div className="relative w-full md:w-64">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Buscar por nome, CNPJ, cidade..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald"
-            />
-          </div>
-
-          {/* Filtro de Status */}
-          <select 
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="py-2 px-3 text-xs border border-slate-200 rounded-md focus:outline-none bg-white font-medium text-slate-600"
+        <div className="flex items-center bg-slate-100 p-1 rounded-lg mr-auto">
+          <button
+            onClick={() => setActiveView('lista')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-md transition-all ${activeView === 'lista' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
           >
-            <option value="Todos">Todos os Status</option>
-            <option value="Ativo">Ativo</option>
-            <option value="Inativo">Inativo</option>
-            <option value="Pendente">Pendente</option>
-            <option value="Bloqueado">Bloqueado</option>
-          </select>
-
-          {/* Filtro de Serviço */}
-          <select 
-            value={serviceFilter}
-            onChange={(e) => setServiceFilter(e.target.value)}
-            className="py-2 px-3 text-xs border border-slate-200 rounded-md focus:outline-none bg-white font-medium text-slate-600"
+            <List className="w-3.5 h-3.5" /> Lista
+          </button>
+          <button
+            onClick={() => setActiveView('dashboard')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-md transition-all ${activeView === 'dashboard' ? 'bg-white text-brand-emerald shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
           >
-            <option value="Todos">Todos os Serviços</option>
-            {servicesConfig.map(s => (
-              <option key={s.id} value={s.id}>{s.title}</option>
-            ))}
-          </select>
+            <LayoutDashboard className="w-3.5 h-3.5" /> Dashboard
+          </button>
         </div>
+
+        {activeView === 'lista' && (
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            {/* Busca */}
+            <div className="relative w-full md:w-64">
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Buscar por nome, CNPJ, cidade..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald"
+              />
+            </div>
+
+            {/* Filtro de Status */}
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="py-2 px-3 text-xs border border-slate-200 rounded-md focus:outline-none bg-white font-medium text-slate-600"
+            >
+              <option value="Todos">Todos os Status</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Inativo">Inativo</option>
+              <option value="Pendente">Pendente</option>
+              <option value="Bloqueado">Bloqueado</option>
+            </select>
+
+            {/* Filtro de Serviço */}
+            <select 
+              value={serviceFilter}
+              onChange={(e) => setServiceFilter(e.target.value)}
+              className="py-2 px-3 text-xs border border-slate-200 rounded-md focus:outline-none bg-white font-medium text-slate-600"
+            >
+              <option value="Todos">Todos os Serviços</option>
+              {servicesConfig.map(s => (
+                <option key={s.id} value={s.id}>{s.title}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <button 
           onClick={handleOpenCreate}
@@ -280,8 +358,10 @@ export default function AdminCompanies() {
         </button>
       </div>
 
-      {/* Lista / Tabela */}
-      {loading ? (
+      {/* Lista / Tabela / Dashboard */}
+      {activeView === 'dashboard' ? (
+        <AdminCompaniesDashboard companies={companies} />
+      ) : loading ? (
         <div className="bg-white p-16 rounded-xl border border-slate-200 shadow-sm text-center">
           <Loader2 className="w-8 h-8 text-brand-emerald animate-spin mx-auto mb-4" />
           <p className="text-slate-400 text-xs">Carregando lista de empresas homologadas...</p>
@@ -477,9 +557,31 @@ export default function AdminCompanies() {
               </button>
             </div>
 
+            {/* Abas do Modal */}
+            <div className="flex border-b border-slate-200 bg-slate-50 px-6">
+              <button
+                type="button"
+                onClick={() => setModalTab('cadastro')}
+                className={`py-3 px-4 text-xs font-bold border-b-2 transition-colors ${modalTab === 'cadastro' ? 'border-brand-emerald text-brand-emerald' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+              >
+                Dados Cadastrais
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalTab('auditoria')}
+                className={`py-3 px-4 text-xs font-bold border-b-2 transition-colors ${modalTab === 'auditoria' ? 'border-brand-emerald text-brand-emerald' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+              >
+                Auditoria & Métricas
+              </button>
+            </div>
+
             {/* Formulario */}
             <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-6 space-y-6">
-              {/* Seção 1: Imagem / Logotipo */}
+              
+              {/* ABA 1: CADASTRO */}
+              {modalTab === 'cadastro' && (
+                <>
+                  {/* Seção 1: Imagem / Logotipo */}
               <div className="flex flex-col sm:flex-row items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200/60">
                 <div className="w-16 h-16 bg-white rounded-xl border border-slate-200 flex items-center justify-center p-2 relative overflow-hidden flex-shrink-0">
                   {uploadingLogo ? (
@@ -685,10 +787,15 @@ export default function AdminCompanies() {
                   })}
                 </div>
               </div>
+                </>
+              )}
 
+              {/* ABA 2: AUDITORIA E MÉTRICAS */}
+              {modalTab === 'auditoria' && (
+                <>
               {/* Seção 5: Score e Desempenho */}
               <div className="space-y-4">
-                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-1">Auditoria e Desempenho (Pontuação)</h4>
+                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-1">Desempenho Geral (Calculado Automaticamente)</h4>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-1">
@@ -737,6 +844,67 @@ export default function AdminCompanies() {
                 </div>
               </div>
 
+              {/* Seção Nova: Checklist de Requisitos */}
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-1">Requisitos de Homologação (Checklist)</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 bg-slate-50 p-4 rounded-xl border border-slate-200/50">
+                  {[
+                    { key: 'experiencia_comprovada', label: 'Experiência Comprovada' },
+                    { key: 'regularidade_empresarial', label: 'Regularidade Empresarial' },
+                    { key: 'qualificacao_tecnica', label: 'Qualificação Técnica' },
+                    { key: 'capacidade_operacional', label: 'Capacidade Operacional' },
+                    { key: 'comprometimento_qualidade', label: 'Comprometimento c/ Qualidade' },
+                  ].map((req) => (
+                    <label key={req.key} className="flex items-center gap-2 cursor-pointer">
+                      <input 
+                        type="checkbox"
+                        checked={editingCompany.metricas?.[req.key as keyof typeof editingCompany.metricas] as boolean || false}
+                        onChange={(e) => setEditingCompany({
+                          ...editingCompany,
+                          metricas: { ...editingCompany.metricas, [req.key]: e.target.checked } as any
+                        })}
+                        className="w-3.5 h-3.5 text-brand-emerald border-slate-300 rounded"
+                      />
+                      <span className="text-xs text-slate-600 font-medium">{req.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Seção Nova: Desempenho e Avaliações */}
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-1">Desempenho e Qualidade (0 a 5 Estrelas)</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {[
+                    { key: 'qualidade_servicos', label: 'Qualidade dos Serviços' },
+                    { key: 'cumprimento_prazos', label: 'Cumprimento de Prazos' },
+                    { key: 'organizacao', label: 'Organização' },
+                    { key: 'atendimento', label: 'Atendimento' },
+                    { key: 'pos_venda', label: 'Pós-Venda' },
+                    { key: 'feedback_clientes', label: 'Feedback dos Clientes' },
+                  ].map((metric) => (
+                    <div key={metric.key} className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase flex justify-between">
+                        {metric.label}
+                        <span className="text-brand-emerald">{editingCompany.metricas?.[metric.key as keyof typeof editingCompany.metricas] || 0}</span>
+                      </label>
+                      <input 
+                        type="range"
+                        min="0"
+                        max="5"
+                        step="0.1"
+                        value={editingCompany.metricas?.[metric.key as keyof typeof editingCompany.metricas] as number || 0}
+                        onChange={(e) => setEditingCompany({
+                          ...editingCompany,
+                          metricas: { ...editingCompany.metricas, [metric.key]: parseFloat(e.target.value) } as any
+                        })}
+                        className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-brand-emerald"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Seção 6: Observações Internas */}
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-slate-500 uppercase">Observações e Informações Adicionais</label>
@@ -747,6 +915,8 @@ export default function AdminCompanies() {
                   className="w-full text-xs p-3 border border-slate-200 rounded-md focus:outline-none min-h-[80px]"
                 />
               </div>
+                </>
+              )}
             </form>
 
             {/* Footer Modal */}
