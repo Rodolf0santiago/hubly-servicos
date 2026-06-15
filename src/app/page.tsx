@@ -22,15 +22,8 @@ export default async function Home() {
       </div>
       
       <header className="absolute top-0 w-full px-6 py-6 md:px-12 md:py-8 flex justify-between items-center z-50">
-        <div className="flex items-center gap-3 md:gap-4 group cursor-pointer">
-          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-10 md:h-12 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-110" />
-          <div className="flex flex-col justify-center pt-1">
-            <div className="flex items-baseline gap-1.5 md:gap-2">
-              <span className="font-montserrat font-black text-slate-900 dark:text-white text-2xl md:text-[28px] tracking-tighter uppercase leading-none">INTEGRA</span>
-              <span className="font-montserrat font-bold text-slate-500 dark:text-slate-400 text-lg md:text-xl tracking-tight uppercase leading-none">SOLUÇÕES SC</span>
-            </div>
-            <span className="text-[8.5px] md:text-[10px] text-brand-emerald font-black tracking-[0.35em] md:tracking-[0.4em] uppercase mt-1.5">Premium Services</span>
-          </div>
+        <div className="flex items-center group cursor-pointer">
+          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-12 md:h-16 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105" />
         </div>
         <ThemeToggle />
       </header>
