@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { Company } from '@/types';
 import { 
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell,
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
 import { Award, ShieldCheck, CheckCircle, TrendingUp, Users } from 'lucide-react';
@@ -182,7 +182,7 @@ export default function AdminCompaniesDashboard({ companies }: Props) {
                 <Bar dataKey="count" fill="#3b82f6" radius={[0, 4, 4, 0]}>
                   {
                     stats.checklistData.map((entry, index) => (
-                      <cell key={`cell-${index}`} fill={index % 2 === 0 ? '#3b82f6' : '#0ea5e9'} />
+                      <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#3b82f6' : '#0ea5e9'} />
                     ))
                   }
                 </Bar>
