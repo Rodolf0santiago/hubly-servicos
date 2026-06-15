@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { updateLeadStatusAction, updateLeadDetailsAction, getLeadsAction, createLeadFromAdminAction } from '@/app/actions/leads';
+import { getCompaniesAction } from '@/app/actions/companies';
 import { env } from '@/config/env';
-import { Lead, LeadStatus } from '@/types';
+import { Lead, LeadStatus, Company } from '@/types';
 import { MessageCircle, Download, Filter, Plus, MoreHorizontal, Search, LayoutGrid, List, X, Clock, Save, Edit3, BarChart, Users, TrendingUp } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import AdminCMS from '@/components/AdminCMS';
@@ -46,6 +47,7 @@ function DashboardContent() {
   const activeTab = searchParams.get('tab') || 'dashboard';
 
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [configError, setConfigError] = useState(false);
 
@@ -126,14 +128,22 @@ function DashboardContent() {
         return;
       }
 
-      const res = await getLeadsAction();
-      if (!res.success) {
-        throw new Error(res.error);
+      const [leadsRes, compRes] = await Promise.all([
+        getLeadsAction(),
+        getCompaniesAction()
+      ]);
+
+      if (!leadsRes.success) {
+        throw new Error(leadsRes.error);
       }
-      setLeads(res.data || []);
+      setLeads(leadsRes.data || []);
+      
+      if (compRes.success && compRes.data) {
+        setCompanies(compRes.data);
+      }
     } catch (error: any) {
-      console.error('Erro ao buscar leads:', error);
-      alert(error.message || 'Erro ao carregar os leads.');
+      console.error('Erro ao buscar dados:', error);
+      alert(error.message || 'Erro ao carregar os dados.');
       if (error.message?.includes('Acesso não autorizado')) {
         window.location.href = '/admin/login';
       }
@@ -1219,6 +1229,66 @@ function DashboardContent() {
                         className="w-full min-h-[120px] p-3 text-xs border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald bg-yellow-50/30 resize-none text-slate-700"
                       />
                     </div>
+
+                    {/* Empresa Executora */}
+                    <div className="flex flex-col mt-4 pt-4 border-t border-slate-100">
+                      <label className="text-[10px] font-bold text-brand-emerald uppercase tracking-wider block mb-1">
+                        Empresa Executora (Parceiro)
+                      </label>
+                      <select
+                        value={selectedLead.empresa_executora_id || ''}
+                        onChange={(e) => setSelectedLead({
+                          ...selectedLead, 
+                          empresa_executora_id: e.target.value || undefined,
+                          avaliacao_parceiro: e.target.value ? (selectedLead.avaliacao_parceiro || {}) : undefined
+                        })}
+                        className="w-full py-1.5 px-3 text-xs border border-emerald-200 rounded-md focus:outline-none focus:border-emerald-500 bg-emerald-50/30 text-slate-700 font-semibold"
+                      >
+                        <option value="">Selecione uma empresa parceira...</option>
+                        {companies.map(c => (
+                          <option key={c.id} value={c.id}>{c.nome_fantasia || c.razao_social}</option>
+                        ))}
+                      </select>
+                      <p className="text-[9px] text-slate-400 mt-1">Vincule este lead a uma empresa homologada para gerar métricas de desempenho.</p>
+                    </div>
+
+                    {/* Avaliação do Parceiro */}
+                    {selectedLead.empresa_executora_id && (
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mt-3 space-y-3">
+                        <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-slate-200 pb-1.5">
+                          Avaliação de Desempenho (0 a 5)
+                        </h4>
+                        
+                        <div className="grid grid-cols-2 gap-3">
+                          {[
+                            { key: 'qualidade_servicos', label: 'Qualidade do Serviço' },
+                            { key: 'cumprimento_prazos', label: 'Cumprimento de Prazos' },
+                            { key: 'organizacao', label: 'Organização/Limpeza' },
+                            { key: 'atendimento', label: 'Atendimento ao Cliente' },
+                            { key: 'pos_venda', label: 'Pós-Venda / Suporte' },
+                            { key: 'feedback_clientes', label: 'Feedback do Cliente' },
+                          ].map(item => (
+                            <div key={item.key}>
+                              <label className="text-[9px] font-bold text-slate-500 block mb-1">{item.label}</label>
+                              <input 
+                                type="number" 
+                                min="0" max="5" step="0.5"
+                                value={selectedLead.avaliacao_parceiro?.[item.key as keyof typeof selectedLead.avaliacao_parceiro] || ''}
+                                onChange={(e) => setSelectedLead({
+                                  ...selectedLead,
+                                  avaliacao_parceiro: {
+                                    ...(selectedLead.avaliacao_parceiro || {}),
+                                    [item.key]: e.target.value ? Number(e.target.value) : undefined
+                                  }
+                                })}
+                                className="w-full py-1.5 px-3 text-xs border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald text-slate-800 font-bold bg-white"
+                                placeholder="0 a 5"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 

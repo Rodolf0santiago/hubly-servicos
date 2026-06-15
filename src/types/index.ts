@@ -27,6 +27,15 @@ export interface Lead {
   solar_protocolo?: string;
   solar_prazo_etapa?: string;    // data limite da etapa atual (YYYY-MM-DD)
   solar_pendencia?: string;      // descrição de pendência ou próxima ação
+  empresa_executora_id?: string; // ID da empresa homologada que executou o serviço
+  avaliacao_parceiro?: {
+    qualidade_servicos?: number;
+    cumprimento_prazos?: number;
+    organizacao?: number;
+    atendimento?: number;
+    pos_venda?: number;
+    feedback_clientes?: number;
+  };
 }
 
 export interface GaleriaItem {

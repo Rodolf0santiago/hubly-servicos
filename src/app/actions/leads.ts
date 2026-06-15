@@ -141,7 +141,9 @@ export async function updateLeadDetailsAction(lead: Lead) {
         solar_paineis: lead.solar_paineis,
         solar_protocolo: lead.solar_protocolo,
         solar_prazo_etapa: lead.solar_prazo_etapa,
-        solar_pendencia: lead.solar_pendencia
+        solar_pendencia: lead.solar_pendencia,
+        empresa_executora_id: lead.empresa_executora_id,
+        avaliacao_parceiro: lead.avaliacao_parceiro
       })
       .eq('id', lead.id)
       .select()
@@ -150,6 +152,11 @@ export async function updateLeadDetailsAction(lead: Lead) {
     if (error) {
       console.error('Error updating lead details in database:', error);
       throw new Error(error.message);
+    }
+
+    if (lead.empresa_executora_id) {
+      const { recalcularScoreEmpresa } = await import('./companies');
+      await recalcularScoreEmpresa(lead.empresa_executora_id);
     }
 
     revalidatePath('/admin');
