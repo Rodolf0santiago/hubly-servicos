@@ -297,11 +297,11 @@ export default function ComoFuncionaContent() {
           >
             <motion.div variants={fadeUp} className="w-full lg:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 relative group">
               <div className="absolute inset-0 bg-brand-emerald/10 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
-              <img src="/images/crm-dashboard-1.jpg" alt="Dashboard do CRM mostrando empresas homologadas e qualidade da rede" className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" />
+              <img src="/images/crm-dashboard-2.png" alt="Dashboard do CRM mostrando empresas homologadas e qualidade da rede" className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" />
             </motion.div>
             <motion.div variants={fadeUp} className="w-full lg:w-1/2 rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 relative group">
               <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
-              <img src="/images/crm-dashboard-2.png" alt="Lista de empresas no CRM com pontuação e status" className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" />
+              <img src="/images/crm-dashboard-1.jpg" alt="Lista de empresas no CRM com pontuação e status" className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" />
             </motion.div>
           </motion.div>
         </div>
