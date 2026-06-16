@@ -10,7 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import AdminCMS from '@/components/AdminCMS';
 import AdminSecurity from '@/components/AdminSecurity';
 import AdminSolarProjects from '@/components/AdminSolarProjects';
-import AdminGaleria from '@/components/AdminGaleria';
+
 import AdminCompanies from '@/components/AdminCompanies';
 import AdminServiceTrackings from '@/components/AdminServiceTrackings';
 import AdminReports from '@/components/AdminReports';
@@ -644,10 +644,6 @@ function DashboardContent() {
         />
       )}
 
-      {/* VIEW: GALERIA & DEPOIMENTOS */}
-      {activeTab === 'galeria' && (
-        <AdminGaleria />
-      )}
 
       {/* VIEW: EMPRESAS HOMOLOGADAS */}
       {activeTab === 'empresas' && (

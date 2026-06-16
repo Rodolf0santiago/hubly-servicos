@@ -6,6 +6,7 @@ import {
   saveSiteSettingsAction, 
   uploadSiteImageAction 
 } from '@/app/actions/settings';
+import AdminGaleria from '@/components/AdminGaleria';
 import { 
   Save, 
   Upload, 
@@ -418,7 +419,7 @@ const DEFAULT_COMO_FUNCIONA_PAGE = {
 };
 
 export default function AdminCMS() {
-  const [subTab, setSubTab] = useState<'hero' | 'services' | 'instalacao_page' | 'testimonials' | 'trust' | 'como_funciona' | 'company_metrics' | 'interactive_house' | 'general'>('hero');
+  const [subTab, setSubTab] = useState<'hero' | 'services' | 'instalacao_page' | 'testimonials' | 'galeria' | 'trust' | 'como_funciona' | 'company_metrics' | 'interactive_house' | 'general'>('hero');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -553,6 +554,7 @@ export default function AdminCMS() {
           { id: 'como_funciona', name: 'Pág: Como Funciona', icon: BadgeCheck },
           { id: 'instalacao_page', name: 'Pág: Solar', icon: Sun },
           { id: 'testimonials', name: 'Depoimentos', icon: MessageSquare },
+          { id: 'galeria', name: 'Galeria & Depoimentos', icon: ImageIcon },
           { id: 'trust', name: 'Por que Nós? (Confiança)', icon: BadgeCheck },
           { id: 'general', name: 'Configurações Gerais', icon: Settings },
         ].map((tab) => (
@@ -1029,6 +1031,13 @@ export default function AdminCMS() {
                 Salvar Serviços
               </button>
             </div>
+          </div>
+        )}
+
+        {/* ABA GALERIA & DEPOIMENTOS */}
+        {subTab === 'galeria' && (
+          <div className="space-y-4 animate-in fade-in duration-300">
+            <AdminGaleria />
           </div>
         )}
 
