@@ -2,113 +2,122 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Zap, ThermometerSun, ShieldCheck, CheckCircle2, FileSpreadsheet, ArrowRight } from 'lucide-react';
+import { Sun, Zap, ThermometerSun, ShieldCheck, CheckCircle2, ArrowRight, HelpCircle, Cpu, Fingerprint, Snowflake } from 'lucide-react';
 import Link from 'next/link';
 
-interface ServiceDetail {
-  id: number;
-  title: string;
-  subtitle: string;
-  description: string;
-  benefits: string[];
-  badge: string;
-  buttonText: string;
-  href: string;
-  icon: React.ComponentType<any>;
-  color: string;
-  bgColor: string;
-  borderColor: string;
-  coords: { x: number; y: number };
+const iconMap: Record<string, React.ComponentType<any>> = {
+  Sun,
+  Zap,
+  ThermometerSun,
+  ShieldCheck,
+  Cpu,
+  Fingerprint,
+  Snowflake,
+  HelpCircle
+};
+
+export const DEFAULT_INTERACTIVE_HOUSE = {
+  badge: "Integra Smart Home",
+  title_part1: "UMA ÚNICA ENERGIA.",
+  title_part2: "MÚLTIPLAS SOLUÇÕES.",
+  description: "Conectamos tecnologia, conforto e sustentabilidade para gerar economia imediata e valorizar o seu imóvel. Toque nos pontos da casa ou navegue pelos serviços para ver como funciona.",
+  image: "/images/hubly_house_diagram.png",
+  services: [
+    {
+      id: 0,
+      title: "Energia Solar Residencial",
+      subtitle: "Geração própria de energia limpa e renovável.",
+      description: "Economize até 95% na sua fatura de energia elétrica e proteja-se contra a inflação energética. A Integra Soluções SC cuida de toda a viabilidade técnica, projeto de engenharia e homologação na concessionária.",
+      benefits: [
+        "Economia imediata de até 95% na conta",
+        "Retorno de investimento (Payback) rápido",
+        "Valorização instantânea de mercado do imóvel",
+        "Equipamentos premium com até 25 anos de garantia"
+      ],
+      badge: "Energia Inteligente",
+      buttonText: "Simular Projeto Solar",
+      href: "/instalacao",
+      icon: "Sun",
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-500/10",
+      borderColor: "border-emerald-500/20",
+      coords: { x: 42, y: 24 }
+    },
+    {
+      id: 1,
+      title: "Carregamento Veicular (EV)",
+      subtitle: "Infraestrutura moderna e segura para recarga em casa.",
+      description: "Carregue o seu veículo elétrico no conforto do seu lar utilizando a energia gerada pelo sol. Projetos completos com carregadores de carga rápida (Wallbox), proteções obrigatórias (DPS e DR) e estudo de capacidade da rede.",
+      benefits: [
+        "Custo de recarga até 80% menor que gasolina",
+        "Estação de carregamento inteligente e rápida (Wallbox)",
+        "Dispositivos de proteção elétrica inclusos (DPS/DR)",
+        "Integração perfeita com o sistema solar da casa"
+      ],
+      badge: "Mobilidade Elétrica",
+      buttonText: "Orçamento de Carregador",
+      href: "/carregamento-veicular",
+      icon: "Zap",
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+      borderColor: "border-blue-500/20",
+      coords: { x: 27, y: 68 }
+    },
+    {
+      id: 2,
+      title: "Aquecimento de Piso Premium",
+      subtitle: "O máximo conforto térmico inteligente para o seu lar.",
+      description: "Esqueça o frio nos pés com o aquecimento sob o piso. Um sistema totalmente silencioso, invisível e energeticamente eficiente, controlado por termostatos inteligentes wifi com controle independente de zonas.",
+      benefits: [
+        "Temperatura uniforme e agradável por toda a casa",
+        "Controle inteligente por aplicativo no celular/Wi-Fi",
+        "Livre de poeira e ácaros (ideal para pessoas alérgicas)",
+        "Instalação compatível com porcelanato, vinílico e madeira"
+      ],
+      badge: "Conforto Térmico",
+      buttonText: "Simular Aquecimento de Piso",
+      href: "/aquecimento",
+      icon: "ThermometerSun",
+      color: "text-orange-500",
+      bgColor: "bg-orange-500/10",
+      borderColor: "border-orange-500/20",
+      coords: { x: 58, y: 82 }
+    },
+    {
+      id: 3,
+      title: "Limpeza Técnica de Placas",
+      subtitle: "Manutenção automatizada com robôs para máxima performance.",
+      description: "A sujeira acumulada nas suas placas solares pode reduzir a sua geração em até 30%. Realizamos limpeza técnica especializada com água desmineralizada e robôs automáticos de última geração, sem riscos aos módulos.",
+      benefits: [
+        "Recuperação imediata da eficiência de geração solar",
+        "Limpeza automatizada segura sem riscos de trincas nos vidros",
+        "Prolongamento da vida útil e proteção das placas",
+        "Equipe técnica certificada pelas normas NR35 e NR10"
+      ],
+      badge: "Alta Performance",
+      buttonText: "Calcular Perda por Sujeira",
+      href: "/calculadora",
+      icon: "ShieldCheck",
+      color: "text-[#DC2626]",
+      bgColor: "bg-red-500/10",
+      borderColor: "border-red-500/20",
+      coords: { x: 64, y: 24 }
+    }
+  ]
+};
+
+interface InteractiveHouseProps {
+  data?: any;
 }
 
-const servicesData: ServiceDetail[] = [
-  {
-    id: 0,
-    title: "Energia Solar Residencial",
-    subtitle: "Geração própria de energia limpa e renovável.",
-    description: "Economize até 95% na sua fatura de energia elétrica e proteja-se contra a inflação energética. A Integra Soluções SC cuida de toda a viabilidade técnica, projeto de engenharia e homologação na concessionária.",
-    benefits: [
-      "Economia imediata de até 95% na conta",
-      "Retorno de investimento (Payback) rápido",
-      "Valorização instantânea de mercado do imóvel",
-      "Equipamentos premium com até 25 anos de garantia"
-    ],
-    badge: "Energia Inteligente",
-    buttonText: "Simular Projeto Solar",
-    href: "/instalacao",
-    icon: Sun,
-    color: "text-emerald-500",
-    bgColor: "bg-emerald-500/10",
-    borderColor: "border-emerald-500/20",
-    coords: { x: 42, y: 24 }
-  },
-  {
-    id: 1,
-    title: "Carregamento Veicular (EV)",
-    subtitle: "Infraestrutura moderna e segura para recarga em casa.",
-    description: "Carregue o seu veículo elétrico no conforto do seu lar utilizando a energia gerada pelo sol. Projetos completos com carregadores de carga rápida (Wallbox), proteções obrigatórias (DPS e DR) e estudo de capacidade da rede.",
-    benefits: [
-      "Custo de recarga até 80% menor que gasolina",
-      "Estação de carregamento inteligente e rápida (Wallbox)",
-      "Dispositivos de proteção elétrica inclusos (DPS/DR)",
-      "Integração perfeita com o sistema solar da casa"
-    ],
-    badge: "Mobilidade Elétrica",
-    buttonText: "Orçamento de Carregador",
-    href: "/carregamento-veicular",
-    icon: Zap,
-    color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
-    borderColor: "border-blue-500/20",
-    coords: { x: 27, y: 68 }
-  },
-  {
-    id: 2,
-    title: "Aquecimento de Piso Premium",
-    subtitle: "O máximo conforto térmico inteligente para o seu lar.",
-    description: "Esqueça o frio nos pés com o aquecimento sob o piso. Um sistema totalmente silencioso, invisível e energeticamente eficiente, controlado por termostatos inteligentes wifi com controle independente de zonas.",
-    benefits: [
-      "Temperatura uniforme e agradável por toda a casa",
-      "Controle inteligente por aplicativo no celular/Wi-Fi",
-      "Livre de poeira e ácaros (ideal para pessoas alérgicas)",
-      "Instalação compatível com porcelanato, vinílico e madeira"
-    ],
-    badge: "Conforto Térmico",
-    buttonText: "Simular Aquecimento de Piso",
-    href: "/aquecimento",
-    icon: ThermometerSun,
-    color: "text-orange-500",
-    bgColor: "bg-orange-500/10",
-    borderColor: "border-orange-500/20",
-    coords: { x: 58, y: 82 }
-  },
-  {
-    id: 3,
-    title: "Limpeza Técnica de Placas",
-    subtitle: "Manutenção automatizada com robôs para máxima performance.",
-    description: "A sujeira acumulada nas suas placas solares pode reduzir a sua geração em até 30%. Realizamos limpeza técnica especializada com água desmineralizada e robôs automáticos de última geração, sem riscos aos módulos.",
-    benefits: [
-      "Recuperação imediata da eficiência de geração solar",
-      "Limpeza automatizada segura sem riscos de trincas nos vidros",
-      "Prolongamento da vida útil e proteção das placas",
-      "Equipe técnica certificada pelas normas NR35 e NR10"
-    ],
-    badge: "Alta Performance",
-    buttonText: "Calcular Perda por Sujeira",
-    href: "/calculadora",
-    icon: ShieldCheck,
-    color: "text-[#DC2626]",
-    bgColor: "bg-red-500/10",
-    borderColor: "border-red-500/20",
-    coords: { x: 64, y: 24 }
-  }
-];
-
-export default function InteractiveHouse() {
+export default function InteractiveHouse({ data }: InteractiveHouseProps) {
+  const info = { ...DEFAULT_INTERACTIVE_HOUSE, ...data };
+  const services = Array.isArray(info.services) ? info.services : DEFAULT_INTERACTIVE_HOUSE.services;
+  
   const [activeTab, setActiveTab] = useState<number>(0);
 
-  const activeService = servicesData[activeTab];
-  const ActiveIcon = activeService.icon;
+  const activeService = services.find((s: any) => s.id === activeTab) || services[0] || DEFAULT_INTERACTIVE_HOUSE.services[0];
+  const ActiveIcon = iconMap[activeService.icon] || HelpCircle;
 
   return (
     <section className="w-full py-20 bg-slate-50 dark:bg-slate-950 border-y border-slate-200/50 dark:border-slate-800/50">
@@ -117,26 +126,26 @@ export default function InteractiveHouse() {
         {/* Title and Intro */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-emerald/10 text-brand-emerald text-xs font-bold uppercase tracking-widest mb-4 border border-brand-emerald/20">
-            Integra Smart Home
+            {info.badge}
           </span>
           <h2 className="text-3xl md:text-4xl font-montserrat font-black text-brand-navy dark:text-slate-100 uppercase tracking-tighter leading-tight">
-            UMA ÚNICA ENERGIA. <span className="text-brand-emerald">MÚLTIPLAS SOLUÇÕES.</span>
+            {info.title_part1} <span className="text-brand-emerald">{info.title_part2}</span>
           </h2>
           <div className="w-16 h-1 bg-brand-emerald mx-auto rounded-full mt-4 mb-4" />
           <p className="text-slate-500 dark:text-slate-400 font-medium text-sm md:text-base leading-relaxed">
-            Conectamos tecnologia, conforto e sustentabilidade para gerar economia imediata e valorizar o seu imóvel. Toque nos pontos da casa ou navegue pelos serviços para ver como funciona.
+            {info.description}
           </p>
         </div>
 
-        {/* Interactive Interactive Box */}
+        {/* Interactive Box */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mb-16">
           
           {/* List/Details panel (Left - 5 Cols) */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             {/* Tabs List */}
             <div className="grid grid-cols-2 lg:grid-cols-1 gap-2.5">
-              {servicesData.map((service) => {
-                const TabIcon = service.icon;
+              {services.map((service: any) => {
+                const TabIcon = iconMap[service.icon] || HelpCircle;
                 const isActive = activeTab === service.id;
                 return (
                   <button
@@ -153,7 +162,7 @@ export default function InteractiveHouse() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className={`text-xs font-black uppercase tracking-tight truncate ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400 font-semibold'}`}>
-                        {service.id + 1}. {service.title.split(' (')[0]}
+                        {(service.id + 1)}. {service.title.split(' (')[0]}
                       </p>
                       <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate font-medium">
                         {service.badge}
@@ -192,7 +201,7 @@ export default function InteractiveHouse() {
                   </p>
 
                   <div className="space-y-2.5">
-                    {activeService.benefits.map((benefit, i) => (
+                    {(activeService.benefits || []).map((benefit: string, i: number) => (
                       <div key={i} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-400 font-medium">
                         <CheckCircle2 className={`w-4 h-4 ${activeService.color} flex-shrink-0 mt-0.5`} />
                         <span>{benefit}</span>
@@ -223,15 +232,15 @@ export default function InteractiveHouse() {
             {/* Main House Image */}
             <div className="relative w-full h-full max-w-[550px] aspect-square flex items-center justify-center">
               <img
-                src="/images/hubly_house_diagram.png"
-                alt="Diagrama Casa Eficiente Integra"
+                src={info.image}
+                alt="Diagrama Casa Eficiente"
                 className="w-full h-full object-contain select-none"
               />
 
               {/* Glowing Hotspots */}
-              {servicesData.map((service) => {
+              {services.map((service: any) => {
                 const isActive = activeTab === service.id;
-                const SpotIcon = service.icon;
+                const SpotIcon = iconMap[service.icon] || HelpCircle;
                 return (
                   <button
                     key={service.id}
@@ -270,9 +279,8 @@ export default function InteractiveHouse() {
 
         </div>
 
-        {/* Benefits/Pillars grid */}
+        {/* Pillars / Pillars grid - hardcoded static block as it is generic, but the title and descriptions are highly generic */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-8 border-t border-slate-200/60 dark:border-slate-800/60">
-          
           <div className="bg-white dark:bg-slate-900/40 p-5 rounded-2xl border border-slate-200/50 dark:border-slate-800/40 shadow-sm space-y-3">
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
               <CheckCircle2 className="w-4 h-4" />
@@ -312,7 +320,6 @@ export default function InteractiveHouse() {
               Tecnologias sustentáveis integradas valorizam o valor patrimonial da residência em até 10% a mais no mercado.
             </p>
           </div>
-
         </div>
 
         {/* Credentials Badges */}

@@ -23,7 +23,8 @@ import {
   Settings,
   ChevronUp,
   ChevronDown,
-  Sun
+  Sun,
+  BarChart
 } from 'lucide-react';
 
 const DEFAULT_HERO = {
@@ -255,8 +256,169 @@ const DEFAULT_INSTALACAO_PAGE = {
   hibrido_image: '/images/sistema_hibrido.png'
 };
 
+const DEFAULT_COMPANY_METRICS = {
+  badge: "Controle de Qualidade",
+  title_part1: "Acompanhamento rigoroso das",
+  title_part2: "empresas parceiras",
+  description: "Não basta apenas conectar você aos profissionais. Nós possuímos um Sistema de Gestão Exclusivo que monitora e pontua cada empresa baseada na performance de obras reais.",
+  image1: "/images/crm-dashboard-1.jpg?v=4",
+  image2: "/images/crm-dashboard-2.png?v=4",
+  indicator1_icon: "TrendingUp",
+  indicator1_title: "Auditoria Contínua",
+  indicator1_desc: "Cada projeto entregue gera uma nota de 0 a 5 em diversos requisitos como pontualidade e qualidade.",
+  indicator2_icon: "CheckCircle2",
+  indicator2_title: "Transparência Total",
+  indicator2_desc: "As empresas homologadas precisam manter um Score alto para continuarem recebendo projetos da rede."
+};
+
+const DEFAULT_INTERACTIVE_HOUSE = {
+  badge: "Integra Smart Home",
+  title_part1: "UMA ÚNICA ENERGIA.",
+  title_part2: "MÚLTIPLAS SOLUÇÕES.",
+  description: "Conectamos tecnologia, conforto e sustentabilidade para gerar economia imediata e valorizar o seu imóvel. Toque nos pontos da casa ou navegue pelos serviços para ver como funciona.",
+  image: "/images/hubly_house_diagram.png",
+  services: [
+    {
+      id: 0,
+      title: "Energia Solar Residencial",
+      subtitle: "Geração própria de energia limpa e renovável.",
+      description: "Economize até 95% na sua fatura de energia elétrica e proteja-se contra a inflação energética. A Integra Soluções SC cuida de toda a viabilidade técnica, projeto de engenharia e homologação na concessionária.",
+      benefits: [
+        "Economia imediata de até 95% na conta",
+        "Retorno de investimento (Payback) rápido",
+        "Valorização instantânea de mercado do imóvel",
+        "Equipamentos premium com até 25 anos de garantia"
+      ],
+      badge: "Energia Inteligente",
+      buttonText: "Simular Projeto Solar",
+      href: "/instalacao",
+      icon: "Sun",
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-500/10",
+      borderColor: "border-emerald-500/20",
+      coords: { x: 42, y: 24 }
+    },
+    {
+      id: 1,
+      title: "Carregamento Veicular (EV)",
+      subtitle: "Infraestrutura moderna e segura para recarga em casa.",
+      description: "Carregue o seu veículo elétrico no conforto do seu lar utilizando a energia gerada pelo sol. Projetos completos com carregadores de carga rápida (Wallbox), proteções obrigatórias (DPS e DR) e estudo de capacidade da rede.",
+      benefits: [
+        "Custo de recarga até 80% menor que gasolina",
+        "Estação de carregamento inteligente e rápida (Wallbox)",
+        "Dispositivos de proteção elétrica inclusos (DPS/DR)",
+        "Integração perfeita com o sistema solar da casa"
+      ],
+      badge: "Mobilidade Elétrica",
+      buttonText: "Orçamento de Carregador",
+      href: "/carregamento-veicular",
+      icon: "Zap",
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+      borderColor: "border-blue-500/20",
+      coords: { x: 27, y: 68 }
+    },
+    {
+      id: 2,
+      title: "Aquecimento de Piso Premium",
+      subtitle: "O máximo conforto térmico inteligente para o seu lar.",
+      description: "Esqueça o frio nos pés com o aquecimento sob o piso. Um sistema totalmente silencioso, invisível e energeticamente eficiente, controlado por termostatos inteligentes wifi com controle independente de zonas.",
+      benefits: [
+        "Temperatura uniforme e agradável por toda a casa",
+        "Controle inteligente por aplicativo no celular/Wi-Fi",
+        "Livre de poeira e ácaros (ideal para pessoas alérgicas)",
+        "Instalação compatível com porcelanato, vinílico e madeira"
+      ],
+      badge: "Conforto Térmico",
+      buttonText: "Simular Aquecimento de Piso",
+      href: "/aquecimento",
+      icon: "ThermometerSun",
+      color: "text-orange-500",
+      bgColor: "bg-orange-500/10",
+      borderColor: "border-orange-500/20",
+      coords: { x: 58, y: 82 }
+    },
+    {
+      id: 3,
+      title: "Limpeza Técnica de Placas",
+      subtitle: "Manutenção automatizada com robôs para máxima performance.",
+      description: "A sujeira acumulada nas suas placas solares pode reduzir a sua geração em até 30%. Realizamos limpeza técnica especializada com água desmineralizada e robôs automáticos de última geração, sem riscos aos módulos.",
+      benefits: [
+        "Recuperação imediata da eficiência de geração solar",
+        "Limpeza automatizada segura sem riscos de trincas nos vidros",
+        "Prolongamento da vida útil e proteção das placas",
+        "Equipe técnica certificada pelas normas NR35 e NR10"
+      ],
+      badge: "Alta Performance",
+      buttonText: "Calcular Perda por Sujeira",
+      href: "/calculadora",
+      icon: "ShieldCheck",
+      color: "text-[#DC2626]",
+      bgColor: "bg-red-500/10",
+      borderColor: "border-red-500/20",
+      coords: { x: 64, y: 24 }
+    }
+  ]
+};
+
+const DEFAULT_COMO_FUNCIONA_PAGE = {
+  hero_badge: "Transparência e Qualidade",
+  hero_title_part1: "Como Trabalhamos na",
+  hero_title_part2: "INTEGRA",
+  hero_title_part3: "Soluções SC",
+  hero_desc1: "Conectamos clientes às melhores empresas parceiras, com acompanhamento, controle de qualidade e gestão completa através do nosso CRM.",
+  hero_desc2: "A INTEGRA Soluções SC atua como uma integradora de soluções e gestora de projetos, conectando clientes a empresas parceiras previamente homologadas e avaliadas. Nosso diferencial está na seleção criteriosa dos parceiros, no acompanhamento contínuo dos serviços e em um sistema de gestão baseado em desempenho, qualidade e satisfação do cliente.",
+  
+  timeline_title: "Nosso Modelo de Trabalho",
+  timeline_subtitle: "Um processo inteligente e estruturado para garantir a melhor experiência de ponta a ponta.",
+  timeline_steps: [
+    { title: "1. Solicitação do Cliente", desc: "O cliente entra em contato através do nosso site e informa a necessidade. Nossa plataforma recebe e organiza tudo para análise.", icon: "ClipboardList" },
+    { title: "2. Análise da Demanda", desc: "Avaliamos a solicitação (região, especialização, disponibilidade) e identificamos empresas homologadas com capacidade técnica.", icon: "Search" },
+    { title: "3. Seleção da Empresa", desc: "A escolha é feita via CRM considerando qualidade, prazos, competitividade, satisfação e histórico de pontuação.", icon: "Award" },
+    { title: "4. Encaminhamento", desc: "A empresa parceira recebe a oportunidade e contata o cliente para levantamento técnico, orçamento e planejamento.", icon: "Handshake" },
+    { title: "5. Acompanhamento", desc: "Monitoramos pelo CRM os prazos, etapas, pendências, atendimento e qualidade da execução durante todo o processo.", icon: "Activity" },
+    { title: "6. Avaliação e Melhoria", desc: "Resultados são registrados. Parceiros com melhor desempenho recebem prioridade; os que não mantêm o padrão são suspensos.", icon: "TrendingUp" }
+  ],
+
+  marketing_badge: "Marketing Estratégico",
+  marketing_title: "Nós Investimos para Gerar Oportunidades",
+  marketing_desc1: "A INTEGRA Soluções SC investe continuamente na geração de novos clientes através de estratégias de marketing digital e publicidade online.",
+  marketing_desc2: "Enquanto nossos parceiros focam na execução dos serviços, nós focamos na prospecção, qualificação e gestão dos leads. Nosso objetivo é facilitar o acesso dos clientes a empresas qualificadas.",
+  marketing_tags: "Google Ads, Redes Sociais, SEO, Marketing de Conteúdo, Geração de Leads, Divulgação Regional",
+
+  qualif_title: "Nosso Sistema de Qualificação",
+  qualif_subtitle: "Parceiros avaliados continuamente para manter um alto padrão de excelência.",
+  qualif_card1_title: "Empresas Homologadas",
+  qualif_card1_desc: "Todas as empresas passam por análise antes de ingressarem na rede.",
+  qualif_card1_items: "Experiência comprovada, Regularidade empresarial, Qualificação técnica, Capacidade operacional, Comprometimento com qualidade",
+  qualif_card2_title: "Sistema de Pontuação",
+  qualif_card2_desc: "Nosso CRM registra indicadores de desempenho em tempo real.",
+  qualif_card2_items: "Qualidade dos serviços, Cumprimento de prazos, Organização, Atendimento, Pós-venda, Feedback dos clientes",
+  qualif_card3_title: "Meritocracia",
+  qualif_card3_desc: "Os parceiros mais bem avaliados recebem maior prioridade na distribuição de oportunidades de negócios.",
+  qualif_card3_desc2: "Isso garante uma rede em constante evolução e melhoria contínua, recompensando quem entrega os melhores resultados.",
+
+  crm_badge: "Monitoramento em Tempo Real",
+  crm_title: "Acompanhamento e Gestão Exclusiva",
+  crm_desc: "Utilizamos um sistema de CRM próprio para acompanhar de perto a performance das empresas homologadas. Monitoramos pontuação, avaliação de qualidade e cumprimento de prazos para garantir a excelência do serviço.",
+  crm_image1: "/images/crm-dashboard-2.png?v=4",
+  crm_image2: "/images/crm-dashboard-1.jpg?v=4",
+
+  benefits_title_client: "Vantagens para Você",
+  benefits_subtitle_client: "(Cliente)",
+  benefits_client_items: "Empresas homologadas, Mais segurança na contratação, Controle e acompanhamento, Atendimento mais rápido, Qualidade monitorada, Menor risco na escolha, Transparência nas etapas, Profissionais especializados",
+  
+  benefits_title_partner: "Cresça Conosco",
+  benefits_subtitle_partner: "(Empresas Parceiras)",
+  benefits_partner_items: "Receba novos clientes, Leads qualificados, Menor investimento em marketing, Gestão através do CRM, Aumento da visibilidade, Mais oportunidades de negócios, Avaliação por desempenho, Crescimento sustentável",
+
+  mission_title: "Nossa Missão",
+  mission_desc: "Integrar clientes e empresas qualificadas através de um processo transparente, organizado e monitorado, garantindo excelência na prestação de serviços e melhoria contínua de toda a rede parceira.",
+  mission_bullets: "Conectamos aos melhores., Acompanhamos cada etapa., Valorizamos a qualidade., Geramos oportunidades., Entregamos confiança."
+};
+
 export default function AdminCMS() {
-  const [subTab, setSubTab] = useState<'hero' | 'services' | 'instalacao_page' | 'testimonials' | 'trust' | 'general'>('hero');
+  const [subTab, setSubTab] = useState<'hero' | 'services' | 'instalacao_page' | 'testimonials' | 'trust' | 'como_funciona' | 'company_metrics' | 'interactive_house' | 'general'>('hero');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -268,6 +430,9 @@ export default function AdminCMS() {
   const [testimonialsData, setTestimonialsData] = useState(DEFAULT_TESTIMONIALS);
   const [trustData, setTrustData] = useState(DEFAULT_TRUST);
   const [instalacaoPageData, setInstalacaoPageData] = useState(DEFAULT_INSTALACAO_PAGE);
+  const [companyMetricsData, setCompanyMetricsData] = useState(DEFAULT_COMPANY_METRICS);
+  const [interactiveHouseData, setInteractiveHouseData] = useState(DEFAULT_INTERACTIVE_HOUSE);
+  const [comoFuncionaData, setComoFuncionaData] = useState(DEFAULT_COMO_FUNCIONA_PAGE);
   const [generalData, setGeneralData] = useState({ whatsappNumber: '5548999999999' });
 
   // Loading image state
@@ -297,6 +462,9 @@ export default function AdminCMS() {
         if (data.testimonials) setTestimonialsData(data.testimonials);
         if (data.trust) setTrustData({ ...DEFAULT_TRUST, ...data.trust });
         if (data.instalacao_page) setInstalacaoPageData({ ...DEFAULT_INSTALACAO_PAGE, ...data.instalacao_page });
+        if (data.company_metrics) setCompanyMetricsData({ ...DEFAULT_COMPANY_METRICS, ...data.company_metrics });
+        if (data.interactive_house) setInteractiveHouseData({ ...DEFAULT_INTERACTIVE_HOUSE, ...data.interactive_house });
+        if (data.como_funciona) setComoFuncionaData({ ...DEFAULT_COMO_FUNCIONA_PAGE, ...data.como_funciona });
         if (data.general) setGeneralData({ ...generalData, ...data.general });
       }
     } catch (err: any) {
@@ -382,7 +550,10 @@ export default function AdminCMS() {
         {[
           { id: 'hero', name: 'Seção Principal (Hero)', icon: Sparkles },
           { id: 'services', name: 'Serviços', icon: ShieldCheck },
-          { id: 'instalacao_page', name: 'Página: Solar', icon: Sun },
+          { id: 'interactive_house', name: 'Casa Inteligente', icon: Sparkles },
+          { id: 'company_metrics', name: 'Acompanhamento CRM', icon: BarChart },
+          { id: 'como_funciona', name: 'Pág: Como Funciona', icon: BadgeCheck },
+          { id: 'instalacao_page', name: 'Pág: Solar', icon: Sun },
           { id: 'testimonials', name: 'Depoimentos', icon: MessageSquare },
           { id: 'trust', name: 'Por que Nós? (Confiança)', icon: BadgeCheck },
           { id: 'general', name: 'Configurações Gerais', icon: Settings },
@@ -1147,6 +1318,492 @@ export default function AdminCMS() {
             <div className="pt-4 border-t border-slate-100 flex justify-end">
               <button onClick={() => handleSave('instalacao_page', instalacaoPageData)} disabled={saving} className="bg-brand-emerald hover:bg-emerald-600 disabled:bg-slate-300 text-white font-bold px-5 py-2.5 rounded-lg text-xs flex items-center gap-2 cursor-pointer shadow-sm transition-all">
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Salvar Página Solar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ABA ACOMPANHAMENTO CRM */}
+        {subTab === 'company_metrics' && (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 mb-1">Seção: Acompanhamento e Gestão Exclusiva (CRM)</h3>
+              <p className="text-xs text-slate-500">Altere textos, indicadores e envie novas capturas de tela do painel do CRM.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Minicard Superior</label>
+                <input type="text" value={companyMetricsData.badge} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, badge: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 1</label>
+                <input type="text" value={companyMetricsData.title_part1} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, title_part1: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 2 (Destacada em Verde)</label>
+                <input type="text" value={companyMetricsData.title_part2} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, title_part2: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald" />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Descrição</label>
+              <textarea value={companyMetricsData.description} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, description: e.target.value })} className="w-full text-xs p-3 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald min-h-[70px]" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border border-slate-100 rounded-xl bg-slate-50/50">
+              <div className="space-y-2">
+                <h4 className="text-xs font-bold text-slate-700">Foto 1 (Fundo / Lista)</h4>
+                <div className="aspect-video bg-white border border-slate-200 rounded-lg p-1 flex flex-col items-center justify-center relative overflow-hidden">
+                  {uploadingImageId === 'metrics_img1' ? (
+                    <Loader2 className="w-6 h-6 text-brand-emerald animate-spin" />
+                  ) : (
+                    <>
+                      <img src={companyMetricsData.image1} alt="Preview 1" className="w-full h-full object-cover rounded" />
+                      <label className="absolute inset-0 bg-slate-900/60 text-white text-[10px] font-bold opacity-0 hover:opacity-100 flex flex-col justify-center items-center cursor-pointer transition-opacity">
+                        <Upload className="w-4 h-4 mb-1" /> Enviar Foto
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setCompanyMetricsData({ ...companyMetricsData, image1: url }), 'metrics_img1')} />
+                      </label>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h4 className="text-xs font-bold text-slate-700">Foto 2 (Frente / Dashboard / Radar)</h4>
+                <div className="aspect-video bg-white border border-slate-200 rounded-lg p-1 flex flex-col items-center justify-center relative overflow-hidden">
+                  {uploadingImageId === 'metrics_img2' ? (
+                    <Loader2 className="w-6 h-6 text-brand-emerald animate-spin" />
+                  ) : (
+                    <>
+                      <img src={companyMetricsData.image2} alt="Preview 2" className="w-full h-full object-cover rounded" />
+                      <label className="absolute inset-0 bg-slate-900/60 text-white text-[10px] font-bold opacity-0 hover:opacity-100 flex flex-col justify-center items-center cursor-pointer transition-opacity">
+                        <Upload className="w-4 h-4 mb-1" /> Enviar Foto
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setCompanyMetricsData({ ...companyMetricsData, image2: url }), 'metrics_img2')} />
+                      </label>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 border border-slate-200 rounded-lg space-y-3 bg-white">
+                <h4 className="text-xs font-black text-slate-700 uppercase">Indicador 1</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-bold text-slate-400 uppercase">Ícone</label>
+                    <input type="text" value={companyMetricsData.indicator1_icon} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator1_icon: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-bold text-slate-400 uppercase">Título</label>
+                    <input type="text" value={companyMetricsData.indicator1_title} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator1_title: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-400 uppercase">Descrição</label>
+                  <textarea value={companyMetricsData.indicator1_desc} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator1_desc: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[50px] resize-none" />
+                </div>
+              </div>
+
+              <div className="p-4 border border-slate-200 rounded-lg space-y-3 bg-white">
+                <h4 className="text-xs font-black text-slate-700 uppercase">Indicador 2</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-bold text-slate-400 uppercase">Ícone</label>
+                    <input type="text" value={companyMetricsData.indicator2_icon} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator2_icon: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-bold text-slate-400 uppercase">Título</label>
+                    <input type="text" value={companyMetricsData.indicator2_title} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator2_title: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-400 uppercase">Descrição</label>
+                  <textarea value={companyMetricsData.indicator2_desc} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator2_desc: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[50px] resize-none" />
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 flex justify-end">
+              <button onClick={() => handleSave('company_metrics', companyMetricsData)} disabled={saving} className="bg-brand-emerald hover:bg-emerald-600 disabled:bg-slate-300 text-white font-bold px-5 py-2.5 rounded-lg text-xs flex items-center gap-2 cursor-pointer shadow-sm">
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Salvar Acompanhamento CRM
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ABA CASA INTELIGENTE */}
+        {subTab === 'interactive_house' && (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 mb-1">Seção: Casa Inteligente (Interactive House)</h3>
+              <p className="text-xs text-slate-500">Configure os títulos da seção interativa e os 4 pontos de serviços em destaque.</p>
+            </div>
+
+            <div className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4">
+              <h4 className="text-xs font-bold text-slate-700">Cabeçalho da Seção</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase block">Badge</label>
+                  <input type="text" value={interactiveHouseData.badge} onChange={(e) => setInteractiveHouseData({ ...interactiveHouseData, badge: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase block">Título 1</label>
+                  <input type="text" value={interactiveHouseData.title_part1} onChange={(e) => setInteractiveHouseData({ ...interactiveHouseData, title_part1: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase block">Título 2 (Verde)</label>
+                  <input type="text" value={interactiveHouseData.title_part2} onChange={(e) => setInteractiveHouseData({ ...interactiveHouseData, title_part2: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase block">Foto Diagrama da Casa</label>
+                  <div className="flex items-center gap-3">
+                    <div className="w-16 h-10 bg-white border border-slate-200 rounded overflow-hidden flex items-center justify-center flex-shrink-0">
+                      {uploadingImageId === 'house_img' ? (
+                        <Loader2 className="w-4 h-4 text-brand-emerald animate-spin" />
+                      ) : (
+                        <img src={interactiveHouseData.image} className="w-full h-full object-contain" />
+                      )}
+                    </div>
+                    <label className="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded text-[10px] font-bold cursor-pointer transition-all flex items-center gap-1">
+                      <Upload className="w-3 h-3" /> Enviar Diagrama
+                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setInteractiveHouseData({ ...interactiveHouseData, image: url }), 'house_img')} />
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase block">Descrição</label>
+                <textarea value={interactiveHouseData.description} onChange={(e) => setInteractiveHouseData({ ...interactiveHouseData, description: e.target.value })} className="w-full text-xs p-3 border border-slate-200 bg-white rounded-md min-h-[60px]" />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="text-xs font-black text-slate-700 uppercase">Pontos Interativos (4 Serviços)</h4>
+              
+              <div className="grid grid-cols-1 gap-6">
+                {(interactiveHouseData.services || []).map((service: any, index: number) => {
+                  return (
+                    <div key={service.id} className="p-4 border border-slate-200 rounded-xl bg-white space-y-4 shadow-sm">
+                      <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                        <span className="text-xs font-bold text-brand-emerald">Serviço #{index + 1} - {service.title}</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-400 uppercase">Título</label>
+                          <input type="text" value={service.title} onChange={(e) => {
+                            const updated = [...interactiveHouseData.services];
+                            updated[index].title = e.target.value;
+                            setInteractiveHouseData({ ...interactiveHouseData, services: updated });
+                          }} className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-400 uppercase">Subtítulo</label>
+                          <input type="text" value={service.subtitle} onChange={(e) => {
+                            const updated = [...interactiveHouseData.services];
+                            updated[index].subtitle = e.target.value;
+                            setInteractiveHouseData({ ...interactiveHouseData, services: updated });
+                          }} className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-400 uppercase">Badge</label>
+                          <input type="text" value={service.badge} onChange={(e) => {
+                            const updated = [...interactiveHouseData.services];
+                            updated[index].badge = e.target.value;
+                            setInteractiveHouseData({ ...interactiveHouseData, services: updated });
+                          }} className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded" />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-400 uppercase">Link Botão (HREF)</label>
+                          <input type="text" value={service.href} onChange={(e) => {
+                            const updated = [...interactiveHouseData.services];
+                            updated[index].href = e.target.value;
+                            setInteractiveHouseData({ ...interactiveHouseData, services: updated });
+                          }} className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-400 uppercase">Texto do Botão</label>
+                          <input type="text" value={service.buttonText} onChange={(e) => {
+                            const updated = [...interactiveHouseData.services];
+                            updated[index].buttonText = e.target.value;
+                            setInteractiveHouseData({ ...interactiveHouseData, services: updated });
+                          }} className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-400 uppercase">Ícone</label>
+                          <input type="text" value={service.icon} onChange={(e) => {
+                            const updated = [...interactiveHouseData.services];
+                            updated[index].icon = e.target.value;
+                            setInteractiveHouseData({ ...interactiveHouseData, services: updated });
+                          }} className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded" />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-bold text-slate-400 uppercase">Descrição Explicativa</label>
+                        <textarea value={service.description} onChange={(e) => {
+                          const updated = [...interactiveHouseData.services];
+                          updated[index].description = e.target.value;
+                          setInteractiveHouseData({ ...interactiveHouseData, services: updated });
+                        }} className="w-full text-xs p-2.5 border border-slate-200 rounded min-h-[50px]" />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-bold text-slate-400 uppercase block">Lista de Benefícios (4 itens)</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {[0, 1, 2, 3].map((benIdx) => (
+                            <input key={benIdx} type="text" value={service.benefits?.[benIdx] || ''} onChange={(e) => {
+                              const updated = [...interactiveHouseData.services];
+                              if (!updated[index].benefits) updated[index].benefits = ['', '', '', ''];
+                              updated[index].benefits[benIdx] = e.target.value;
+                              setInteractiveHouseData({ ...interactiveHouseData, services: updated });
+                            }} className="w-full text-xs px-2.5 py-1 border border-slate-200 rounded" placeholder={`Benefício ${benIdx + 1}`} />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 flex justify-end">
+              <button onClick={() => handleSave('interactive_house', interactiveHouseData)} disabled={saving} className="bg-brand-emerald hover:bg-emerald-600 disabled:bg-slate-300 text-white font-bold px-5 py-2.5 rounded-lg text-xs flex items-center gap-2 cursor-pointer shadow-sm">
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Salvar Casa Inteligente
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ABA PÁGINA COMO FUNCIONA */}
+        {subTab === 'como_funciona' && (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 mb-1">Página: Como Trabalhamos (Processo & CRM)</h3>
+              <p className="text-xs text-slate-500">Configure todos os textos, timelines e capturas de tela da página "Como Trabalhamos".</p>
+            </div>
+
+            {/* SEÇÃO HERO */}
+            <div className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4">
+              <h4 className="text-xs font-bold text-slate-700">1. Entrada da Página (Hero)</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Badge</label>
+                  <input type="text" value={comoFuncionaData.hero_badge} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, hero_badge: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Título - Parte 1</label>
+                  <input type="text" value={comoFuncionaData.hero_title_part1} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, hero_title_part1: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Título - Parte 2 (Destaque Verde)</label>
+                  <input type="text" value={comoFuncionaData.hero_title_part2} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, hero_title_part2: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Título - Parte 3</label>
+                  <input type="text" value={comoFuncionaData.hero_title_part3} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, hero_title_part3: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Descrição 1</label>
+                <textarea value={comoFuncionaData.hero_desc1} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, hero_desc1: e.target.value })} className="w-full text-xs p-2.5 border border-slate-200 bg-white rounded-md min-h-[50px]" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Descrição 2 (Secundária)</label>
+                <textarea value={comoFuncionaData.hero_desc2} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, hero_desc2: e.target.value })} className="w-full text-xs p-2.5 border border-slate-200 bg-white rounded-md min-h-[50px]" />
+              </div>
+            </div>
+
+            {/* NOSSO MODELO DE TRABALHO */}
+            <div className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4">
+              <h4 className="text-xs font-bold text-slate-700">2. Linha do Tempo (Nosso Modelo de Trabalho)</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Título</label>
+                  <input type="text" value={comoFuncionaData.timeline_title} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, timeline_title: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Subtítulo</label>
+                  <input type="text" value={comoFuncionaData.timeline_subtitle} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, timeline_subtitle: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-bold text-slate-400 uppercase block">Etapas da Timeline (6 etapas)</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {(comoFuncionaData.timeline_steps || []).map((step: any, index: number) => (
+                    <div key={index} className="p-3 bg-white border border-slate-200 rounded-lg space-y-2">
+                      <span className="text-[9px] font-bold text-slate-400">ETAPA {index + 1}</span>
+                      <input type="text" value={step.title} onChange={(e) => {
+                        const updated = [...comoFuncionaData.timeline_steps];
+                        updated[index].title = e.target.value;
+                        setComoFuncionaData({ ...comoFuncionaData, timeline_steps: updated });
+                      }} className="w-full text-xs px-2.5 py-1 border border-slate-200 rounded font-semibold" placeholder="Título" />
+                      <textarea value={step.desc} onChange={(e) => {
+                        const updated = [...comoFuncionaData.timeline_steps];
+                        updated[index].desc = e.target.value;
+                        setComoFuncionaData({ ...comoFuncionaData, timeline_steps: updated });
+                      }} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[50px] resize-none" placeholder="Descrição" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* SEÇÃO MARKETING */}
+            <div className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4">
+              <h4 className="text-xs font-bold text-slate-700">3. Geração de Clientes (Marketing)</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Badge</label>
+                  <input type="text" value={comoFuncionaData.marketing_badge} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, marketing_badge: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Título</label>
+                  <input type="text" value={comoFuncionaData.marketing_title} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, marketing_title: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Descrição 1</label>
+                <textarea value={comoFuncionaData.marketing_desc1} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, marketing_desc1: e.target.value })} className="w-full text-xs p-2.5 border border-slate-200 bg-white rounded-md min-h-[50px]" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Descrição 2</label>
+                <textarea value={comoFuncionaData.marketing_desc2} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, marketing_desc2: e.target.value })} className="w-full text-xs p-2.5 border border-slate-200 bg-white rounded-md min-h-[50px]" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Tags de Prospecção (Separadas por vírgula)</label>
+                <input type="text" value={comoFuncionaData.marketing_tags} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, marketing_tags: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+              </div>
+            </div>
+
+            {/* SEÇÃO CRM MÍDIA */}
+            <div className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4">
+              <h4 className="text-xs font-bold text-slate-700">4. CRM e Acompanhamento</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Badge</label>
+                  <input type="text" value={comoFuncionaData.crm_badge} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, crm_badge: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Título</label>
+                  <input type="text" value={comoFuncionaData.crm_title} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, crm_title: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Descrição Explicativa</label>
+                <textarea value={comoFuncionaData.crm_desc} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, crm_desc: e.target.value })} className="w-full text-xs p-2.5 border border-slate-200 bg-white rounded-md min-h-[60px]" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-400 uppercase">Foto Painel CRM 1</label>
+                  <div className="flex items-center gap-3">
+                    <div className="w-16 h-10 bg-white border border-slate-200 rounded overflow-hidden flex items-center justify-center">
+                      {uploadingImageId === 'como_crm_img1' ? <Loader2 className="w-4 h-4 text-brand-emerald animate-spin" /> : <img src={comoFuncionaData.crm_image1} className="w-full h-full object-cover" />}
+                    </div>
+                    <label className="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-3 py-1 rounded text-[10px] font-bold cursor-pointer">
+                      <Upload className="w-3.5 h-3.5" /> Enviar
+                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setComoFuncionaData({ ...comoFuncionaData, crm_image1: url }), 'como_crm_img1')} />
+                    </label>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-400 uppercase">Foto Painel CRM 2</label>
+                  <div className="flex items-center gap-3">
+                    <div className="w-16 h-10 bg-white border border-slate-200 rounded overflow-hidden flex items-center justify-center">
+                      {uploadingImageId === 'como_crm_img2' ? <Loader2 className="w-4 h-4 text-brand-emerald animate-spin" /> : <img src={comoFuncionaData.crm_image2} className="w-full h-full object-cover" />}
+                    </div>
+                    <label className="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-3 py-1 rounded text-[10px] font-bold cursor-pointer">
+                      <Upload className="w-3.5 h-3.5" /> Enviar
+                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setComoFuncionaData({ ...comoFuncionaData, crm_image2: url }), 'como_crm_img2')} />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SISTEMA DE QUALIFICAÇÃO */}
+            <div className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4">
+              <h4 className="text-xs font-bold text-slate-700">5. Sistema de Qualificação (3 Cards)</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Título da Seção</label>
+                  <input type="text" value={comoFuncionaData.qualif_title} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_title: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Subtítulo</label>
+                  <input type="text" value={comoFuncionaData.qualif_subtitle} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_subtitle: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                {/* Card 1 */}
+                <div className="p-3 bg-white border border-slate-200 rounded-lg space-y-2">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase block">Card 1</span>
+                  <input type="text" value={comoFuncionaData.qualif_card1_title} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_card1_title: e.target.value })} className="w-full text-xs px-2 py-1 border border-slate-200 rounded font-semibold" placeholder="Título" />
+                  <input type="text" value={comoFuncionaData.qualif_card1_desc} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_card1_desc: e.target.value })} className="w-full text-xs px-2 py-1 border border-slate-200 rounded" placeholder="Descrição" />
+                  <textarea value={comoFuncionaData.qualif_card1_items} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_card1_items: e.target.value })} className="w-full text-[10px] p-2 border border-slate-200 rounded min-h-[50px]" placeholder="Itens separados por vírgula" />
+                </div>
+                {/* Card 2 */}
+                <div className="p-3 bg-white border border-slate-200 rounded-lg space-y-2">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase block">Card 2 (Destaque Navy)</span>
+                  <input type="text" value={comoFuncionaData.qualif_card2_title} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_card2_title: e.target.value })} className="w-full text-xs px-2 py-1 border border-slate-200 rounded font-semibold" placeholder="Título" />
+                  <input type="text" value={comoFuncionaData.qualif_card2_desc} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_card2_desc: e.target.value })} className="w-full text-xs px-2 py-1 border border-slate-200 rounded" placeholder="Descrição" />
+                  <textarea value={comoFuncionaData.qualif_card2_items} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_card2_items: e.target.value })} className="w-full text-[10px] p-2 border border-slate-200 rounded min-h-[50px]" placeholder="Itens separados por vírgula" />
+                </div>
+                {/* Card 3 */}
+                <div className="p-3 bg-white border border-slate-200 rounded-lg space-y-2">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase block">Card 3</span>
+                  <input type="text" value={comoFuncionaData.qualif_card3_title} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_card3_title: e.target.value })} className="w-full text-xs px-2 py-1 border border-slate-200 rounded font-semibold" placeholder="Título" />
+                  <textarea value={comoFuncionaData.qualif_card3_desc} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_card3_desc: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[40px] resize-none" placeholder="Descrição 1" />
+                  <textarea value={comoFuncionaData.qualif_card3_desc2} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, qualif_card3_desc2: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[40px] resize-none" placeholder="Descrição 2" />
+                </div>
+              </div>
+            </div>
+
+            {/* SEÇÃO BENEFÍCIOS */}
+            <div className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4">
+              <h4 className="text-xs font-bold text-slate-700">6. Benefícios de Lado a Lado</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-3 bg-white border border-slate-200 rounded-lg space-y-2">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase block">Benefícios: Cliente</span>
+                  <input type="text" value={comoFuncionaData.benefits_title_client} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, benefits_title_client: e.target.value })} className="w-full text-xs px-2 py-1 border border-slate-200 rounded font-bold" />
+                  <input type="text" value={comoFuncionaData.benefits_subtitle_client} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, benefits_subtitle_client: e.target.value })} className="w-full text-xs px-2 py-1 border border-slate-200 rounded" />
+                  <textarea value={comoFuncionaData.benefits_client_items} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, benefits_client_items: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[65px]" placeholder="Itens separados por vírgula" />
+                </div>
+                <div className="p-3 bg-white border border-slate-200 rounded-lg space-y-2">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase block">Benefícios: Empresas Parceiras</span>
+                  <input type="text" value={comoFuncionaData.benefits_title_partner} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, benefits_title_partner: e.target.value })} className="w-full text-xs px-2 py-1 border border-slate-200 rounded font-bold" />
+                  <input type="text" value={comoFuncionaData.benefits_subtitle_partner} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, benefits_subtitle_partner: e.target.value })} className="w-full text-xs px-2 py-1 border border-slate-200 rounded" />
+                  <textarea value={comoFuncionaData.benefits_partner_items} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, benefits_partner_items: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[65px]" placeholder="Itens separados por vírgula" />
+                </div>
+              </div>
+            </div>
+
+            {/* SEÇÃO MISSÃO */}
+            <div className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 space-y-4">
+              <h4 className="text-xs font-bold text-slate-700">7. Nossa Missão (Painel Final)</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Título da Missão</label>
+                  <input type="text" value={comoFuncionaData.mission_title} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, mission_title: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Descrição da Missão</label>
+                  <textarea value={comoFuncionaData.mission_desc} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, mission_desc: e.target.value })} className="w-full text-xs p-2 border border-slate-200 bg-white rounded-md min-h-[40px]" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Destaques Finais (Separados por vírgula)</label>
+                <input type="text" value={comoFuncionaData.mission_bullets} onChange={(e) => setComoFuncionaData({ ...comoFuncionaData, mission_bullets: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md" />
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 flex justify-end">
+              <button onClick={() => handleSave('como_funciona', comoFuncionaData)} disabled={saving} className="bg-brand-emerald hover:bg-emerald-600 disabled:bg-slate-300 text-white font-bold px-5 py-2.5 rounded-lg text-xs flex items-center gap-2 cursor-pointer shadow-sm">
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Salvar Página Como Funciona
               </button>
             </div>
           </div>
