@@ -193,3 +193,32 @@ export async function createLeadFromAdminAction(leadData: Omit<Lead, 'id' | 'cre
     return { success: false, error: error.message || 'Erro ao cadastrar o lead' };
   }
 }
+
+/**
+ * Deletes a lead from the Supabase database.
+ * Restrito para administradores autenticados.
+ */
+export async function deleteLeadAction(id: string) {
+  try {
+    const isAuthenticated = await verifyAdminSession();
+    if (!isAuthenticated) {
+      return { success: false, error: 'Acesso não autorizado. Sessão inválida ou expirada.' };
+    }
+
+    const { error } = await supabaseAdmin
+      .from('leads')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting lead from database:', error);
+      throw new Error(error.message);
+    }
+
+    revalidatePath('/admin');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Erro ao excluir o lead' };
+  }
+}
+
