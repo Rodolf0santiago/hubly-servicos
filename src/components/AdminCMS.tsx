@@ -544,14 +544,12 @@ export default function AdminCMS() {
           <span>Alterações gravadas com sucesso no Supabase! O site já foi atualizado.</span>
         </div>
       )}
-
       {/* Sub-Navegação interna de abas CMS */}
       <div className="flex border-b border-slate-200 bg-white rounded-t-xl p-2 gap-2 shadow-sm flex-wrap">
         {[
           { id: 'hero', name: 'Seção Principal (Hero)', icon: Sparkles },
           { id: 'services', name: 'Serviços', icon: ShieldCheck },
           { id: 'interactive_house', name: 'Casa Inteligente', icon: Sparkles },
-          { id: 'company_metrics', name: 'Acompanhamento CRM', icon: BarChart },
           { id: 'como_funciona', name: 'Pág: Como Funciona', icon: BadgeCheck },
           { id: 'instalacao_page', name: 'Pág: Solar', icon: Sun },
           { id: 'testimonials', name: 'Depoimentos', icon: MessageSquare },
@@ -581,103 +579,213 @@ export default function AdminCMS() {
       <div className="bg-white p-6 rounded-b-xl border-x border-b border-slate-200 shadow-sm min-h-[350px]">
         {/* ABA HERO */}
         {subTab === 'hero' && (
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 mb-1">Textos da Seção de Entrada (Hero)</h3>
-              <p className="text-xs text-slate-500">Altere o texto principal exibido no topo da página inicial.</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Minicard Superior</label>
-                <input
-                  type="text"
-                  value={heroData.badge}
-                  onChange={(e) => setHeroData({ ...heroData, badge: e.target.value })}
-                  className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald"
-                  placeholder="Ex: Hub de Empresas 100% Homologadas"
-                />
+          <div className="space-y-8 animate-in fade-in duration-300">
+            {/* Card 1: Entrada da Página (Hero) */}
+            <div className="p-5 border border-slate-200 rounded-xl bg-slate-50/30 space-y-5">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 mb-1">Textos da Seção de Entrada (Hero)</h3>
+                <p className="text-xs text-slate-500">Altere o texto principal exibido no topo da página inicial.</p>
               </div>
               
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Minicard Superior</label>
+                  <input
+                    type="text"
+                    value={heroData.badge}
+                    onChange={(e) => setHeroData({ ...heroData, badge: e.target.value })}
+                    className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald"
+                    placeholder="Ex: Hub de Empresas 100% Homologadas"
+                  />
+                </div>
+                
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Texto do Botão (CTA)</label>
+                  <input
+                    type="text"
+                    value={heroData.cta_text}
+                    onChange={(e) => setHeroData({ ...heroData, cta_text: e.target.value })}
+                    className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald"
+                    placeholder="Ex: Solicitar Orçamento Grátis"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 1</label>
+                  <input
+                    type="text"
+                    value={heroData.title_part1}
+                    onChange={(e) => setHeroData({ ...heroData, title_part1: e.target.value })}
+                    className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald font-bold"
+                    placeholder="CONTRATE COM"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 2 (Destacada em Verde)</label>
+                  <input
+                    type="text"
+                    value={heroData.title_part2}
+                    onChange={(e) => setHeroData({ ...heroData, title_part2: e.target.value })}
+                    className="w-full text-xs px-3 py-2 border border-brand-emerald/40 text-brand-emerald bg-white rounded-md focus:outline-none focus:border-brand-emerald font-bold"
+                    placeholder="SEGURANÇA"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 3</label>
+                  <input
+                    type="text"
+                    value={heroData.title_part3}
+                    onChange={(e) => setHeroData({ ...heroData, title_part3: e.target.value })}
+                    className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald font-bold"
+                    placeholder="E ECONOMIA"
+                  />
+                </div>
+              </div>
+
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Texto do Botão (CTA)</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Descrição Principal</label>
+                <textarea
+                  value={heroData.description}
+                  onChange={(e) => setHeroData({ ...heroData, description: e.target.value })}
+                  className="w-full text-xs p-3 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald min-h-[80px]"
+                  placeholder="Insira a descrição que aparece abaixo do título principal..."
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Subtítulo do Grid de Clientes</label>
                 <input
                   type="text"
-                  value={heroData.cta_text}
-                  onChange={(e) => setHeroData({ ...heroData, cta_text: e.target.value })}
-                  className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald"
-                  placeholder="Ex: Solicitar Orçamento Grátis"
+                  value={heroData.trust_subtitle}
+                  onChange={(e) => setHeroData({ ...heroData, trust_subtitle: e.target.value })}
+                  className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald"
+                  placeholder="Ex: Clientes satisfeitos em SC"
                 />
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 flex justify-end">
+                <button
+                  onClick={() => handleSave('hero', heroData)}
+                  disabled={saving}
+                  className="bg-brand-emerald hover:bg-emerald-600 disabled:bg-slate-300 text-white font-bold px-5 py-2.5 rounded-lg text-xs flex items-center gap-2 cursor-pointer shadow-sm transition-all"
+                >
+                  {saving ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
+                  Salvar Seção Principal
+                </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 1</label>
-                <input
-                  type="text"
-                  value={heroData.title_part1}
-                  onChange={(e) => setHeroData({ ...heroData, title_part1: e.target.value })}
-                  className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald font-bold"
-                  placeholder="CONTRATE COM"
-                />
+            {/* Card 2: Acompanhamento e Gestão Exclusiva (CRM) */}
+            <div className="p-5 border border-slate-200 rounded-xl bg-slate-50/30 space-y-5">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 mb-1">Seção: Acompanhamento e Gestão Exclusiva (CRM)</h3>
+                <p className="text-xs text-slate-500">Altere textos, indicadores e envie novas capturas de tela do painel do CRM.</p>
               </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 2 (Destacada em Verde)</label>
-                <input
-                  type="text"
-                  value={heroData.title_part2}
-                  onChange={(e) => setHeroData({ ...heroData, title_part2: e.target.value })}
-                  className="w-full text-xs px-3 py-2 border border-brand-emerald/40 text-brand-emerald rounded-md focus:outline-none focus:border-brand-emerald font-bold"
-                  placeholder="SEGURANÇA"
-                />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Minicard Superior</label>
+                  <input type="text" value={companyMetricsData.badge} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, badge: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 1</label>
+                  <input type="text" value={companyMetricsData.title_part1} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, title_part1: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 2 (Destacada em Verde)</label>
+                  <input type="text" value={companyMetricsData.title_part2} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, title_part2: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald" />
+                </div>
               </div>
+
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 3</label>
-                <input
-                  type="text"
-                  value={heroData.title_part3}
-                  onChange={(e) => setHeroData({ ...heroData, title_part3: e.target.value })}
-                  className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald font-bold"
-                  placeholder="E ECONOMIA"
-                />
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Descrição</label>
+                <textarea value={companyMetricsData.description} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, description: e.target.value })} className="w-full text-xs p-3 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald min-h-[70px]" />
               </div>
-            </div>
 
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Descrição Principal</label>
-              <textarea
-                value={heroData.description}
-                onChange={(e) => setHeroData({ ...heroData, description: e.target.value })}
-                className="w-full text-xs p-3 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald min-h-[80px]"
-                placeholder="Insira a descrição que aparece abaixo do título principal..."
-              />
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border border-slate-200/60 rounded-xl bg-white">
+                <div className="space-y-2">
+                  <h4 className="text-xs font-bold text-slate-700">Foto 1 (Fundo / Lista)</h4>
+                  <div className="aspect-video bg-white border border-slate-200 rounded-lg p-1 flex flex-col items-center justify-center relative overflow-hidden">
+                    {uploadingImageId === 'metrics_img1' ? (
+                      <Loader2 className="w-6 h-6 text-brand-emerald animate-spin" />
+                    ) : (
+                      <>
+                        <img src={companyMetricsData.image1} alt="Preview 1" className="w-full h-full object-cover rounded" />
+                        <label className="absolute inset-0 bg-slate-900/60 text-white text-[10px] font-bold opacity-0 hover:opacity-100 flex flex-col justify-center items-center cursor-pointer transition-opacity">
+                          <Upload className="w-4 h-4 mb-1" /> Enviar Foto
+                          <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setCompanyMetricsData({ ...companyMetricsData, image1: url }), 'metrics_img1')} />
+                        </label>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="text-xs font-bold text-slate-700">Foto 2 (Frente / Dashboard / Radar)</h4>
+                  <div className="aspect-video bg-white border border-slate-200 rounded-lg p-1 flex flex-col items-center justify-center relative overflow-hidden">
+                    {uploadingImageId === 'metrics_img2' ? (
+                      <Loader2 className="w-6 h-6 text-brand-emerald animate-spin" />
+                    ) : (
+                      <>
+                        <img src={companyMetricsData.image2} alt="Preview 2" className="w-full h-full object-cover rounded" />
+                        <label className="absolute inset-0 bg-slate-900/60 text-white text-[10px] font-bold opacity-0 hover:opacity-100 flex flex-col justify-center items-center cursor-pointer transition-opacity">
+                          <Upload className="w-4 h-4 mb-1" /> Enviar Foto
+                          <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setCompanyMetricsData({ ...companyMetricsData, image2: url }), 'metrics_img2')} />
+                        </label>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Subtítulo do Grid de Clientes</label>
-              <input
-                type="text"
-                value={heroData.trust_subtitle}
-                onChange={(e) => setHeroData({ ...heroData, trust_subtitle: e.target.value })}
-                className="w-full text-xs px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald"
-                placeholder="Ex: Clientes satisfeitos em SC"
-              />
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 border border-slate-200 rounded-lg space-y-3 bg-white">
+                  <h4 className="text-xs font-black text-slate-700 uppercase">Indicador 1</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase">Ícone</label>
+                      <input type="text" value={companyMetricsData.indicator1_icon} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator1_icon: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase">Título</label>
+                      <input type="text" value={companyMetricsData.indicator1_title} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator1_title: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-bold text-slate-400 uppercase">Descrição</label>
+                    <textarea value={companyMetricsData.indicator1_desc} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator1_desc: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[50px] resize-none" />
+                  </div>
+                </div>
 
-            <div className="pt-4 border-t border-slate-100 flex justify-end">
-              <button
-                onClick={() => handleSave('hero', heroData)}
-                disabled={saving}
-                className="bg-brand-emerald hover:bg-emerald-600 disabled:bg-slate-300 text-white font-bold px-5 py-2.5 rounded-lg text-xs flex items-center gap-2 cursor-pointer shadow-sm transition-all"
-              >
-                {saving ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Save className="w-4 h-4" />
-                )}
-                Salvar Seção Principal
-              </button>
+                <div className="p-4 border border-slate-200 rounded-lg space-y-3 bg-white">
+                  <h4 className="text-xs font-black text-slate-700 uppercase">Indicador 2</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase">Ícone</label>
+                      <input type="text" value={companyMetricsData.indicator2_icon} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator2_icon: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-bold text-slate-400 uppercase">Título</label>
+                      <input type="text" value={companyMetricsData.indicator2_title} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator2_title: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-bold text-slate-400 uppercase">Descrição</label>
+                    <textarea value={companyMetricsData.indicator2_desc} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator2_desc: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[50px] resize-none" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 flex justify-end">
+                <button onClick={() => handleSave('company_metrics', companyMetricsData)} disabled={saving} className="bg-brand-emerald hover:bg-emerald-600 disabled:bg-slate-300 text-white font-bold px-5 py-2.5 rounded-lg text-xs flex items-center gap-2 cursor-pointer shadow-sm">
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Salvar Acompanhamento CRM
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -1323,114 +1431,7 @@ export default function AdminCMS() {
           </div>
         )}
 
-        {/* ABA ACOMPANHAMENTO CRM */}
-        {subTab === 'company_metrics' && (
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 mb-1">Seção: Acompanhamento e Gestão Exclusiva (CRM)</h3>
-              <p className="text-xs text-slate-500">Altere textos, indicadores e envie novas capturas de tela do painel do CRM.</p>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Minicard Superior</label>
-                <input type="text" value={companyMetricsData.badge} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, badge: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 1</label>
-                <input type="text" value={companyMetricsData.title_part1} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, title_part1: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Título - Parte 2 (Destacada em Verde)</label>
-                <input type="text" value={companyMetricsData.title_part2} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, title_part2: e.target.value })} className="w-full text-xs px-3 py-2 border border-slate-200 bg-white rounded-md focus:outline-none focus:border-brand-emerald" />
-              </div>
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Descrição</label>
-              <textarea value={companyMetricsData.description} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, description: e.target.value })} className="w-full text-xs p-3 border border-slate-200 rounded-md focus:outline-none focus:border-brand-emerald min-h-[70px]" />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border border-slate-100 rounded-xl bg-slate-50/50">
-              <div className="space-y-2">
-                <h4 className="text-xs font-bold text-slate-700">Foto 1 (Fundo / Lista)</h4>
-                <div className="aspect-video bg-white border border-slate-200 rounded-lg p-1 flex flex-col items-center justify-center relative overflow-hidden">
-                  {uploadingImageId === 'metrics_img1' ? (
-                    <Loader2 className="w-6 h-6 text-brand-emerald animate-spin" />
-                  ) : (
-                    <>
-                      <img src={companyMetricsData.image1} alt="Preview 1" className="w-full h-full object-cover rounded" />
-                      <label className="absolute inset-0 bg-slate-900/60 text-white text-[10px] font-bold opacity-0 hover:opacity-100 flex flex-col justify-center items-center cursor-pointer transition-opacity">
-                        <Upload className="w-4 h-4 mb-1" /> Enviar Foto
-                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setCompanyMetricsData({ ...companyMetricsData, image1: url }), 'metrics_img1')} />
-                      </label>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h4 className="text-xs font-bold text-slate-700">Foto 2 (Frente / Dashboard / Radar)</h4>
-                <div className="aspect-video bg-white border border-slate-200 rounded-lg p-1 flex flex-col items-center justify-center relative overflow-hidden">
-                  {uploadingImageId === 'metrics_img2' ? (
-                    <Loader2 className="w-6 h-6 text-brand-emerald animate-spin" />
-                  ) : (
-                    <>
-                      <img src={companyMetricsData.image2} alt="Preview 2" className="w-full h-full object-cover rounded" />
-                      <label className="absolute inset-0 bg-slate-900/60 text-white text-[10px] font-bold opacity-0 hover:opacity-100 flex flex-col justify-center items-center cursor-pointer transition-opacity">
-                        <Upload className="w-4 h-4 mb-1" /> Enviar Foto
-                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, (url) => setCompanyMetricsData({ ...companyMetricsData, image2: url }), 'metrics_img2')} />
-                      </label>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 border border-slate-200 rounded-lg space-y-3 bg-white">
-                <h4 className="text-xs font-black text-slate-700 uppercase">Indicador 1</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="space-y-1">
-                    <label className="text-[9px] font-bold text-slate-400 uppercase">Ícone</label>
-                    <input type="text" value={companyMetricsData.indicator1_icon} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator1_icon: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[9px] font-bold text-slate-400 uppercase">Título</label>
-                    <input type="text" value={companyMetricsData.indicator1_title} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator1_title: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase">Descrição</label>
-                  <textarea value={companyMetricsData.indicator1_desc} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator1_desc: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[50px] resize-none" />
-                </div>
-              </div>
-
-              <div className="p-4 border border-slate-200 rounded-lg space-y-3 bg-white">
-                <h4 className="text-xs font-black text-slate-700 uppercase">Indicador 2</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="space-y-1">
-                    <label className="text-[9px] font-bold text-slate-400 uppercase">Ícone</label>
-                    <input type="text" value={companyMetricsData.indicator2_icon} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator2_icon: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[9px] font-bold text-slate-400 uppercase">Título</label>
-                    <input type="text" value={companyMetricsData.indicator2_title} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator2_title: e.target.value })} className="w-full text-xs px-2 py-1.5 border border-slate-200 rounded" />
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase">Descrição</label>
-                  <textarea value={companyMetricsData.indicator2_desc} onChange={(e) => setCompanyMetricsData({ ...companyMetricsData, indicator2_desc: e.target.value })} className="w-full text-xs p-2 border border-slate-200 rounded min-h-[50px] resize-none" />
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-slate-100 flex justify-end">
-              <button onClick={() => handleSave('company_metrics', companyMetricsData)} disabled={saving} className="bg-brand-emerald hover:bg-emerald-600 disabled:bg-slate-300 text-white font-bold px-5 py-2.5 rounded-lg text-xs flex items-center gap-2 cursor-pointer shadow-sm">
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Salvar Acompanhamento CRM
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* ABA CASA INTELIGENTE */}
         {subTab === 'interactive_house' && (
