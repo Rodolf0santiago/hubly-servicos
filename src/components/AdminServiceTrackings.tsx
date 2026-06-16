@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { ServiceTracking, Lead, Company } from '@/types';
+import { ServiceTracking, Lead, Company, StageDetail } from '@/types';
 import { getTrackingsAction, saveTrackingAction, deleteTrackingAction } from '@/app/actions/trackings';
 import { getLeadsAction } from '@/app/actions/leads';
 import { getCompaniesAction } from '@/app/actions/companies';
@@ -47,6 +47,116 @@ const DEFAULT_TEMPLATES = {
   feedback: "Olá {cliente}! Como o seu serviço de '{servico}' com a {empresa} foi finalizado, gostaríamos muito de saber como foi a sua experiência. O seu feedback nos ajuda a manter o alto padrão de qualidade das nossas empresas homologadas! Como você avalia o serviço prestado?"
 };
 
+// Helpers para melhorias do Acompanhamento
+const formatDate = (dateStr?: string) => {
+  if (!dateStr) return '';
+  const parts = dateStr.split('-');
+  if (parts.length === 3) {
+    return `${parts[2]}/${parts[1]}`;
+  }
+  return dateStr;
+};
+
+const getStageBadgeClass = (status?: string) => {
+  switch (status) {
+    case 'concluido': return 'bg-emerald-50/70 text-emerald-700 border-emerald-200';
+    case 'atrasado': return 'bg-red-50 text-red-700 border-red-200';
+    case 'executando': return 'bg-blue-50 text-blue-700 border-blue-200';
+    case 'pendente':
+    default: return 'bg-slate-50 text-slate-400 border-slate-200';
+  }
+};
+
+const calculateTrackingMetrics = (t: ServiceTracking): ServiceTracking => {
+  const updated = { ...t };
+  if (!updated.etapas_dados) {
+    updated.etapas_dados = {
+      analise_tecnica: { status: 'pendente' },
+      orcamento: { status: 'pendente' },
+      agendamento: { status: 'pendente' },
+      execucao: { status: 'pendente' },
+      vistoria: { status: 'pendente' }
+    };
+  }
+  
+  const stages = ['analise_tecnica', 'orcamento', 'agendamento', 'execucao', 'vistoria'] as const;
+  
+  let totalDelayDays = 0;
+  let totalSlaScore = 0;
+  let slaCount = 0;
+  let totalManualScore = 0;
+  let manualCount = 0;
+  let hasActiveDelay = false;
+  
+  const hojeStr = new Date().toISOString().split('T')[0];
+  
+  stages.forEach(stage => {
+    if (!updated.etapas_dados![stage]) {
+      updated.etapas_dados![stage] = { status: 'pendente' };
+    }
+    
+    const s = updated.etapas_dados![stage]!;
+    
+    // Calculate delay days
+    let delay = 0;
+    if (s.data_fim) {
+      if (s.data_previsao && s.data_fim > s.data_previsao) {
+        const start = new Date(s.data_previsao + 'T00:00:00');
+        const end = new Date(s.data_fim + 'T00:00:00');
+        delay = Math.max(0, Math.ceil((end.getTime() - start.getTime()) / 86400000));
+      }
+    } else if (s.data_previsao && hojeStr > s.data_previsao) {
+      const start = new Date(s.data_previsao + 'T00:00:00');
+      const now = new Date(hojeStr + 'T00:00:00');
+      delay = Math.max(0, Math.ceil((now.getTime() - start.getTime()) / 86400000));
+    }
+    
+    s.atraso_dias = delay;
+    totalDelayDays += delay;
+    
+    // Calculate automatic delay score
+    const scoreAtraso = delay > 0 ? Math.max(0, Number((5.0 - delay * 0.5).toFixed(1))) : 5.0;
+    s.pontuacao_atraso = scoreAtraso;
+    
+    totalSlaScore += scoreAtraso;
+    slaCount++;
+    
+    if (s.pontuacao_manual && s.pontuacao_manual > 0) {
+      totalManualScore += s.pontuacao_manual;
+      manualCount++;
+    }
+    
+    // Determine status
+    if (s.data_fim) {
+      s.status = 'concluido';
+    } else if (delay > 0) {
+      s.status = 'atrasado';
+      hasActiveDelay = true;
+    } else if (s.data_inicio) {
+      s.status = 'executando';
+    } else {
+      s.status = 'pendente';
+    }
+  });
+  
+  updated.dias_totais_atraso = totalDelayDays;
+  
+  // Score global (média do SLA e da nota de qualidade manual)
+  const avgSla = totalSlaScore / (slaCount || 1);
+  const avgManual = manualCount > 0 ? totalManualScore / manualCount : 5.0;
+  updated.score_global_projeto = Number(((avgSla + avgManual) / 2).toFixed(1));
+  
+  if (updated.etapa === 'finalizado') {
+    updated.status_projeto = 'concluido';
+  } else if (hasActiveDelay) {
+    updated.status_projeto = 'atrasado';
+  } else {
+    updated.status_projeto = 'em_dia';
+  }
+  
+  return updated;
+};
+
 export default function AdminServiceTrackings() {
   const [trackings, setTrackings] = useState<ServiceTracking[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -55,6 +165,9 @@ export default function AdminServiceTrackings() {
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+
+  // Aba selecionada na edição por etapas
+  const [activeModalStageTab, setActiveModalStageTab] = useState<'analise_tecnica' | 'orcamento' | 'agendamento' | 'execucao' | 'vistoria'>('analise_tecnica');
 
   // Modelos de Mensagem (Templates)
   const [templates, setTemplates] = useState(DEFAULT_TEMPLATES);
@@ -76,6 +189,38 @@ export default function AdminServiceTrackings() {
   const [msgType, setMsgType] = useState<'cobrar' | 'avisar_etapa' | 'avisar_conclusao' | 'feedback'>('avisar_etapa');
   const [recipient, setRecipient] = useState<'cliente' | 'empresa'>('cliente');
   const [customMsgText, setCustomMsgText] = useState('');
+
+  // Estatísticas para o Dashboard do CRM
+  const dashboardStats = React.useMemo(() => {
+    const total = trackings.length;
+    const concluded = trackings.filter(t => t.etapa === 'finalizado').length;
+    const active = total - concluded;
+    const delayed = trackings.filter(t => t.status_projeto === 'atrasado').length;
+    const onTime = active - delayed;
+    
+    let sumSla = 0;
+    let countSla = 0;
+    trackings.forEach(t => {
+      let projectSla = 0;
+      let projectSlaCount = 0;
+      const stageKeys = ['analise_tecnica', 'orcamento', 'agendamento', 'execucao', 'vistoria'] as const;
+      stageKeys.forEach(s => {
+        const score = t.etapas_dados?.[s]?.pontuacao_atraso;
+        if (typeof score === 'number') {
+          projectSla += score;
+          projectSlaCount++;
+        }
+      });
+      if (projectSlaCount > 0) {
+        sumSla += (projectSla / projectSlaCount);
+        countSla++;
+      }
+    });
+    
+    const slaMedio = countSla > 0 ? Math.round((sumSla / (countSla * 5)) * 100) : 100;
+    
+    return { total, active, concluded, delayed, onTime, slaMedio };
+  }, [trackings]);
 
   useEffect(() => {
     fetchData();
@@ -115,7 +260,7 @@ export default function AdminServiceTrackings() {
 
   const handleOpenCreate = () => {
     setEditingTracking({
-      id: Math.random().toString(36).substring(2, 9),
+      id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 9),
       created_at: new Date().toISOString(),
       cliente_nome: '',
       cliente_whatsapp: '',
@@ -134,8 +279,16 @@ export default function AdminServiceTrackings() {
         atendimento: 0,
         pos_venda: 0,
         feedback_clientes: 0
+      },
+      etapas_dados: {
+        analise_tecnica: { status: 'pendente' },
+        orcamento: { status: 'pendente' },
+        agendamento: { status: 'pendente' },
+        execucao: { status: 'pendente' },
+        vistoria: { status: 'pendente' }
       }
     });
+    setActiveModalStageTab('analise_tecnica');
     setIsEditModalOpen(true);
   };
 
@@ -149,9 +302,21 @@ export default function AdminServiceTrackings() {
         atendimento: 0,
         pos_venda: 0,
         feedback_clientes: 0
+      },
+      etapas_dados: tracking.etapas_dados || {
+        analise_tecnica: { status: 'pendente' },
+        orcamento: { status: 'pendente' },
+        agendamento: { status: 'pendente' },
+        execucao: { status: 'pendente' },
+        vistoria: { status: 'pendente' }
       }
     });
     setIsEditModalOpen(true);
+  };
+
+  const handleOpenEditAtStage = (tracking: ServiceTracking, stageKey: typeof activeModalStageTab) => {
+    setActiveModalStageTab(stageKey);
+    handleOpenEdit(tracking);
   };
 
   const handleDelete = async (id: string) => {
@@ -196,7 +361,8 @@ export default function AdminServiceTrackings() {
     try {
       setSaving(true);
       setErrorMsg('');
-      const res = await saveTrackingAction(editingTracking);
+      const calculated = calculateTrackingMetrics(editingTracking);
+      const res = await saveTrackingAction(calculated);
       if (res.success) {
         showSuccess('Acompanhamento salvo com sucesso!');
         setIsEditModalOpen(false);
@@ -270,7 +436,8 @@ export default function AdminServiceTrackings() {
     const tracking = trackings.find(t => t.id === id);
     if (!tracking) return;
 
-    const updatedTracking = { ...tracking, etapa: newEtapa as any };
+    let updatedTracking = { ...tracking, etapa: newEtapa as any };
+    updatedTracking = calculateTrackingMetrics(updatedTracking);
     
     // Atualização otimista
     setTrackings(trackings.map(t => t.id === id ? updatedTracking : t));
@@ -388,6 +555,68 @@ export default function AdminServiceTrackings() {
     return matchesSearch && matchesEtapa && matchesCompany;
   });
 
+  const renderStageCell = (t: ServiceTracking, stageKey: 'analise_tecnica' | 'orcamento' | 'agendamento' | 'execucao' | 'vistoria') => {
+    const stage = t.etapas_dados?.[stageKey] || { status: 'pendente' };
+    const statusLabels = {
+      pendente: 'Pendente',
+      executando: 'Executando',
+      concluido: 'Concluído',
+      atrasado: 'Atrasado'
+    };
+
+    return (
+      <td 
+        className="px-3 py-3 cursor-pointer hover:bg-slate-50/80 transition-all border-r border-slate-100 last:border-0"
+        onClick={() => handleOpenEditAtStage(t, stageKey)}
+      >
+        <div className={`p-2 rounded-lg border text-[10px] space-y-1 ${getStageBadgeClass(stage.status)}`}>
+          <div className="flex justify-between items-center font-bold">
+            <span>{statusLabels[stage.status || 'pendente']}</span>
+            {stage.status === 'concluido' && <Check className="w-3 h-3 text-emerald-600" />}
+          </div>
+          
+          {/* Datas */}
+          {stage.data_inicio && (
+            <div className="text-[9px] opacity-80">
+              Início: {formatDate(stage.data_inicio)}
+            </div>
+          )}
+          {stage.status !== 'concluido' && stage.data_previsao && (
+            <div className="text-[9px] font-semibold">
+              Prev: {formatDate(stage.data_previsao)}
+            </div>
+          )}
+          {stage.status === 'concluido' && stage.data_fim && (
+            <div className="text-[9px] opacity-80">
+              Fim: {formatDate(stage.data_fim)}
+            </div>
+          )}
+          
+          {/* Pontuações */}
+          <div className="flex items-center gap-2 pt-0.5 border-t border-dotted border-current/20 text-[9px]">
+            {typeof stage.pontuacao_atraso === 'number' && (
+              <span title="Pontuação automática de atraso (SLA)" className="font-semibold flex items-center gap-0.5">
+                ⏱️ {stage.pontuacao_atraso.toFixed(1)}
+              </span>
+            )}
+            {typeof stage.pontuacao_manual === 'number' && stage.pontuacao_manual > 0 && (
+              <span title="Pontuação manual da etapa" className="font-bold flex items-center gap-0.5 text-amber-600">
+                ⭐ {stage.pontuacao_manual.toFixed(1)}
+              </span>
+            )}
+          </div>
+          
+          {/* Indicador de obs */}
+          {stage.observacao && (
+            <div className="text-[8px] italic opacity-85 truncate" title={stage.observacao}>
+              💬 {stage.observacao}
+            </div>
+          )}
+        </div>
+      </td>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* Alertas */}
@@ -403,6 +632,49 @@ export default function AdminServiceTrackings() {
           <span>{successMsg}</span>
         </div>
       )}
+
+      {/* Cards de KPI */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4 animate-in fade-in duration-200">
+          <div className="w-12 h-12 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center">
+            <ClipboardList className="w-6 h-6" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total de Projetos</p>
+            <p className="text-2xl font-black text-slate-800">{dashboardStats.total} <span className="text-sm font-normal text-slate-400">({dashboardStats.active} ativos)</span></p>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4 animate-in fade-in duration-200">
+          <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <Check className="w-6 h-6" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Projetos em Dia</p>
+            <p className="text-2xl font-black text-emerald-600">{dashboardStats.onTime}</p>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4 animate-in fade-in duration-200">
+          <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center">
+            <AlertCircle className="w-6 h-6 animate-pulse" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Projetos Atrasados</p>
+            <p className="text-2xl font-black text-red-600">{dashboardStats.delayed}</p>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4 animate-in fade-in duration-200">
+          <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+            <Clock className="w-6 h-6" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">SLA Geral de Prazos</p>
+            <p className="text-2xl font-black text-blue-600">{dashboardStats.slaMedio}%</p>
+          </div>
+        </div>
+      </div>
 
       {/* Barra de Ações & Filtros */}
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
@@ -479,109 +751,75 @@ export default function AdminServiceTrackings() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-50/85 text-slate-500 text-[10px] uppercase tracking-[0.1em] border-b border-slate-200">
-                  <th className="px-6 py-4 font-bold">Cliente / Contato</th>
-                  <th className="px-6 py-4 font-bold">Serviço</th>
-                  <th className="px-6 py-4 font-bold">Empresa Responsável</th>
-                  <th className="px-6 py-4 font-bold">Etapa Atual</th>
-                  <th className="px-6 py-4 font-bold">Cronograma</th>
-                  <th className="px-6 py-4 font-bold text-center">Notificar</th>
-                  <th className="px-6 py-4 font-bold text-center">Ações</th>
+                  <th className="px-4 py-4 font-bold min-w-[170px]">Cliente / Contato</th>
+                  <th className="px-4 py-4 font-bold min-w-[150px]">Serviço / Responsável</th>
+                  <th className="px-4 py-4 font-bold text-center min-w-[110px]">Análise Técnica</th>
+                  <th className="px-4 py-4 font-bold text-center min-w-[110px]">Orçamento</th>
+                  <th className="px-4 py-4 font-bold text-center min-w-[110px]">Agendamento</th>
+                  <th className="px-4 py-4 font-bold text-center min-w-[110px]">Execução</th>
+                  <th className="px-4 py-4 font-bold text-center min-w-[110px]">Vistoria</th>
+                  <th className="px-4 py-4 font-bold text-center min-w-[110px]">Ações</th>
                 </tr>
               </thead>
               <tbody className="text-xs divide-y divide-slate-100">
                 {filteredTrackings.map((t) => {
-                  const currentEtapa = ETAPAS.find(e => e.id === t.etapa);
                   return (
                     <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
                       {/* Cliente */}
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-4">
                         <div className="font-bold text-slate-900 flex items-center gap-1.5">
                           <User className="w-3.5 h-3.5 text-slate-400" />
                           {t.cliente_nome}
                         </div>
                         <div className="text-[10px] text-slate-500 font-mono mt-0.5 space-y-0.5">
                           <div>📱 {t.cliente_whatsapp}</div>
-                          {t.cliente_email && <div>📧 {t.cliente_email}</div>}
                         </div>
                       </td>
 
-                      {/* Serviço */}
-                      <td className="px-6 py-4">
-                        <span className="px-2.5 py-1 rounded bg-slate-100 border border-slate-200/60 font-bold text-slate-700 text-[10px] uppercase tracking-wide">
+                      {/* Serviço / Empresa */}
+                      <td className="px-4 py-4 space-y-1">
+                        <span className="px-2 py-0.5 rounded bg-slate-100 border border-slate-200/60 font-bold text-slate-700 text-[9px] uppercase tracking-wide block w-fit">
                           {t.servico}
                         </span>
-                      </td>
-
-                      {/* Empresa */}
-                      <td className="px-6 py-4">
-                        <div className="font-semibold text-slate-800 flex items-center gap-1.5">
+                        <div className="font-semibold text-slate-800 flex items-center gap-1">
                           <Building className="w-3.5 h-3.5 text-slate-400" />
-                          {t.empresa_nome}
+                          <span className="truncate max-w-[130px]" title={t.empresa_nome}>{t.empresa_nome}</span>
                         </div>
-                        {t.empresa_whatsapp && (
-                          <div className="text-[9px] text-slate-400 font-mono mt-0.5">📱 {t.empresa_whatsapp}</div>
-                        )}
                       </td>
 
-                      {/* Etapa */}
-                      <td className="px-6 py-4">
-                        <select
-                          value={t.etapa}
-                          onChange={(e) => handleInlineStageChange(t.id, e.target.value as any)}
-                          className={`text-[9px] font-black uppercase tracking-wider border rounded-full px-2.5 py-1 outline-none cursor-pointer border shadow-sm transition-all bg-transparent ${currentEtapa?.color || 'bg-slate-100 text-slate-600 border-slate-200'}`}
-                        >
-                          {ETAPAS.map(e => (
-                            <option key={e.id} value={e.id} className="bg-white text-slate-800 font-semibold">{e.label}</option>
-                          ))}
-                        </select>
-                      </td>
+                      {/* 5 Stages */}
+                      {renderStageCell(t, 'analise_tecnica')}
+                      {renderStageCell(t, 'orcamento')}
+                      {renderStageCell(t, 'agendamento')}
+                      {renderStageCell(t, 'execucao')}
+                      {renderStageCell(t, 'vistoria')}
 
-                      {/* Cronograma */}
-                      <td className="px-6 py-4 space-y-1">
-                        {t.data_inicio && (
-                          <div className="text-[10px] text-slate-500 flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-slate-400" />
-                            <span>Início: {new Date(t.data_inicio + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
-                          </div>
-                        )}
-                        {t.data_previsao ? (
-                          <div className="text-[10px] font-bold text-slate-700 flex items-center gap-1">
-                            <Calendar className="w-3 h-3 text-slate-500" />
-                            <span>Previsão: {new Date(t.data_previsao + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
-                          </div>
-                        ) : (
-                          <div className="text-[9px] italic text-slate-400">Previsão não definida</div>
-                        )}
-                      </td>
-
-                      {/* Notificar */}
-                      <td className="px-6 py-4 text-center">
-                        <button
-                          onClick={() => handleOpenNotify(t)}
-                          className="bg-brand-emerald/10 hover:bg-brand-emerald text-brand-emerald hover:text-white border border-brand-emerald/20 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer inline-flex items-center gap-1.5"
-                          title="Enviar aviso ou cobrar via Whats/Email"
-                        >
-                          <Send className="w-3 h-3" /> Notificar
-                        </button>
-                      </td>
-
-                      {/* Ações */}
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex items-center justify-center gap-1.5">
+                      {/* Ações / Notificar */}
+                      <td className="px-4 py-4 text-center">
+                        <div className="flex flex-col items-center gap-1.5">
                           <button
-                            onClick={() => handleOpenEdit(t)}
-                            className="p-1.5 rounded border border-slate-200 bg-white text-slate-600 hover:text-brand-emerald hover:bg-slate-50 transition-all cursor-pointer"
-                            title="Editar Acompanhamento"
+                            onClick={() => handleOpenNotify(t)}
+                            className="bg-brand-emerald/10 hover:bg-brand-emerald text-brand-emerald hover:text-white border border-brand-emerald/20 px-2 py-1 rounded text-[9px] font-black uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5"
+                            title="Enviar aviso ou cobrar"
                           >
-                            <Edit3 className="w-3.5 h-3.5" />
+                            <Send className="w-2.5 h-2.5" /> Notificar
                           </button>
-                          <button
-                            onClick={() => handleDelete(t.id)}
-                            className="p-1.5 rounded border border-slate-200 bg-white text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer"
-                            title="Remover"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => handleOpenEdit(t)}
+                              className="p-1 rounded border border-slate-200 bg-white text-slate-600 hover:text-brand-emerald hover:bg-slate-50 transition-all cursor-pointer"
+                              title="Editar"
+                            >
+                              <Edit3 className="w-3 h-3" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(t.id)}
+                              className="p-1 rounded border border-slate-200 bg-white text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer"
+                              title="Remover"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -759,6 +997,160 @@ export default function AdminServiceTrackings() {
                     className="w-full text-xs p-3 border border-slate-200 rounded-md focus:outline-none min-h-[80px]"
                   />
                 </div>
+              </div>
+
+              {/* Seção 4: Cronograma Detalhado por Etapa */}
+              <div className="space-y-4 border-t border-slate-100 pt-4">
+                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-1">4. Cronograma Detalhado por Etapa</h4>
+                
+                {/* Abas das Etapas */}
+                <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 overflow-x-auto">
+                  {[
+                    { id: 'analise_tecnica', label: 'Análise' },
+                    { id: 'orcamento', label: 'Orçamento' },
+                    { id: 'agendamento', label: 'Agendamento' },
+                    { id: 'execucao', label: 'Execução' },
+                    { id: 'vistoria', label: 'Vistoria' }
+                  ].map(tab => {
+                    const stData = editingTracking.etapas_dados?.[tab.id as 'analise_tecnica' | 'orcamento' | 'agendamento' | 'execucao' | 'vistoria'] || {};
+                    const stStatus = stData.status || 'pendente';
+                    let statusColor = 'text-slate-500';
+                    if (stStatus === 'concluido') statusColor = 'text-emerald-600 font-bold';
+                    else if (stStatus === 'atrasado') statusColor = 'text-red-500 font-bold';
+                    else if (stStatus === 'executando') statusColor = 'text-blue-500 font-bold';
+                    
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setActiveModalStageTab(tab.id as 'analise_tecnica' | 'orcamento' | 'agendamento' | 'execucao' | 'vistoria')}
+                        className={`flex-1 py-1.5 px-3 rounded text-[11px] font-bold transition-all whitespace-nowrap ${
+                          activeModalStageTab === tab.id 
+                            ? 'bg-white text-slate-800 shadow-sm' 
+                            : `${statusColor} hover:text-slate-700`
+                        }`}
+                      >
+                        {tab.label}
+                        {stStatus === 'concluido' && ' ✓'}
+                        {stStatus === 'atrasado' && ' ⚠'}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Conteúdo da Aba da Etapa Selecionada */}
+                {(() => {
+                  const stageKey = activeModalStageTab;
+                  const stageData = editingTracking.etapas_dados?.[stageKey] || {};
+                  const stageStatus = stageData.status || 'pendente';
+
+                  const updateStageField = (field: keyof StageDetail, val: any) => {
+                    const updatedEtapas = { ...editingTracking.etapas_dados };
+                    updatedEtapas[stageKey] = {
+                      ...updatedEtapas[stageKey],
+                      [field]: val
+                    };
+                    setEditingTracking({
+                      ...editingTracking,
+                      etapas_dados: updatedEtapas
+                    });
+                  };
+
+                  return (
+                <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/60 space-y-4 animate-in fade-in duration-200">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-slate-700">Configurando: {
+                          stageKey === 'analise_tecnica' ? 'Análise Técnica' :
+                          stageKey === 'orcamento' ? 'Orçamento / Proposta' :
+                          stageKey === 'agendamento' ? 'Agendamento / Logística' :
+                          stageKey === 'execucao' ? 'Execução / Instalação' : 'Vistoria / Homologação'
+                        }</span>
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border ${getStageBadgeClass(stageStatus)}`}>
+                          {stageStatus === 'concluido' ? 'Concluído' :
+                           stageStatus === 'atrasado' ? 'Atrasado' :
+                           stageStatus === 'executando' ? 'Executando' : 'Pendente'}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-500 uppercase">Data Início</label>
+                          <input 
+                            type="date"
+                            value={stageData.data_inicio || ''}
+                            onChange={(e) => updateStageField('data_inicio', e.target.value || undefined)}
+                            className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded focus:outline-none bg-white font-semibold text-slate-700"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-500 uppercase">Previsão Fim</label>
+                          <input 
+                            type="date"
+                            value={stageData.data_previsao || ''}
+                            onChange={(e) => updateStageField('data_previsao', e.target.value || undefined)}
+                            className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded focus:outline-none bg-white font-semibold text-slate-700"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-500 uppercase">Data Fim (Conclusão)</label>
+                          <input 
+                            type="date"
+                            value={stageData.data_fim || ''}
+                            onChange={(e) => updateStageField('data_fim', e.target.value || undefined)}
+                            className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded focus:outline-none bg-white font-semibold text-slate-700"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-500 uppercase">Nota Manual (Parceiro)</label>
+                          <select
+                            value={stageData.pontuacao_manual || 0}
+                            onChange={(e) => updateStageField('pontuacao_manual', Number(e.target.value))}
+                            className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded focus:outline-none bg-white font-bold text-slate-700"
+                          >
+                            <option value={0}>Sem Avaliação</option>
+                            <option value={1}>⭐ 1 - Muito Ruim</option>
+                            <option value={2}>⭐⭐ 2 - Ruim</option>
+                            <option value={3}>⭐⭐⭐ 3 - Regular</option>
+                            <option value={4}>⭐⭐⭐⭐ 4 - Bom</option>
+                            <option value={5}>⭐⭐⭐⭐⭐ 5 - Excelente</option>
+                          </select>
+                        </div>
+
+                        {/* Readonly Calculated Fields */}
+                        <div className="p-3 bg-white border border-slate-200 rounded-lg text-[10px] space-y-1">
+                          <span className="font-bold text-slate-400 block uppercase tracking-wide">Atraso Calculado</span>
+                          <span className="font-semibold text-slate-700 text-[9px]">
+                            {stageData.atraso_dias && stageData.atraso_dias > 0 
+                              ? `${stageData.atraso_dias} dia(s) de atraso` 
+                              : 'Em dia / Sem atraso'}
+                          </span>
+                        </div>
+
+                        <div className="p-3 bg-white border border-slate-200 rounded-lg text-[10px] space-y-1">
+                          <span className="font-bold text-slate-400 block uppercase tracking-wide">Nota Automática SLA</span>
+                          <span className={`font-black ${stageData.pontuacao_atraso && stageData.pontuacao_atraso < 5 ? 'text-red-500' : 'text-emerald-600'}`}>
+                            {typeof stageData.pontuacao_atraso === 'number' 
+                              ? `${stageData.pontuacao_atraso.toFixed(1)} / 5.0` 
+                              : '5.0 / 5.0'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-bold text-slate-500 uppercase">Observações da Etapa</label>
+                        <textarea
+                          value={stageData.observacao || ''}
+                          onChange={(e) => updateStageField('observacao', e.target.value)}
+                          placeholder="Digite aqui os comentários específicos para o andamento desta etapa."
+                          className="w-full text-xs p-2.5 border border-slate-200 rounded focus:outline-none min-h-[60px] resize-none leading-relaxed bg-white"
+                        />
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Seção 4: Avaliação do Serviço (Exibida apenas se finalizado) */}

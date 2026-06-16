@@ -85,7 +85,31 @@ export interface Company {
     atendimento?: number;
     pos_venda?: number;
     feedback_clientes?: number;
+
+    // Novas métricas agregadas do CRM
+    crm_sla_medio?: number;               // 0 a 100
+    crm_qualidade_media?: number;         // 0 a 5
+    crm_projetos_ativos?: number;
+    crm_projetos_atrasados?: number;
+    crm_projetos_concluidos?: number;
+    crm_atraso_medio_dias?: number;
+    crm_media_etapa_analise?: number;     // 0 a 5
+    crm_media_etapa_orcamento?: number;   // 0 a 5
+    crm_media_etapa_agendamento?: number; // 0 a 5
+    crm_media_etapa_execucao?: number;    // 0 a 5
+    crm_media_etapa_vistoria?: number;    // 0 a 5
   };
+}
+
+export interface StageDetail {
+  status?: 'pendente' | 'executando' | 'concluido' | 'atrasado';
+  data_inicio?: string;
+  data_fim?: string;
+  data_previsao?: string;
+  observacao?: string;
+  pontuacao_manual?: number; // 0 a 5
+  pontuacao_atraso?: number; // 0 a 5
+  atraso_dias?: number;
 }
 
 export interface ServiceTracking {
@@ -112,5 +136,17 @@ export interface ServiceTracking {
     pos_venda?: number;
     feedback_clientes?: number;
   };
+  // Novos campos estruturados para acompanhamento por etapa
+  etapas_dados?: {
+    analise_tecnica?: StageDetail;
+    orcamento?: StageDetail;
+    agendamento?: StageDetail;
+    execucao?: StageDetail;
+    vistoria?: StageDetail;
+  };
+  score_global_projeto?: number;
+  dias_totais_atraso?: number;
+  status_projeto?: 'em_dia' | 'atrasado' | 'concluido';
+  valor_projeto?: number;
 }
 

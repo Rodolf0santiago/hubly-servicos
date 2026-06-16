@@ -451,8 +451,18 @@ export default function AdminCompanies() {
                     </td>
 
                     {/* Projetos */}
-                    <td className="px-6 py-4 text-center font-bold text-slate-800 font-mono">
-                      {company.projetos_concluidos || 0}
+                    <td className="px-6 py-4 text-center space-y-0.5">
+                      <div className="font-bold text-slate-800 font-mono text-xs">
+                        {company.projetos_concluidos || 0} <span className="text-[9px] text-slate-400 font-normal font-sans">concluídos</span>
+                      </div>
+                      {typeof company.metricas?.crm_projetos_ativos === 'number' && (
+                        <div className="flex justify-center gap-1.5 text-[9px] font-semibold text-slate-500">
+                          <span>{company.metricas.crm_projetos_ativos} ativos</span>
+                          {company.metricas.crm_projetos_atrasados ? (
+                            <span className="text-red-500 font-bold">({company.metricas.crm_projetos_atrasados} ⚠️)</span>
+                          ) : null}
+                        </div>
+                      )}
                     </td>
 
                     {/* Pontuação & Score */}
@@ -462,6 +472,20 @@ export default function AdminCompanies() {
                         <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
                         <span className="font-bold text-slate-700">{Number(company.rating).toFixed(1)}</span>
                         <span className="text-[10px] text-slate-400">/5</span>
+                        {typeof company.metricas?.crm_sla_medio === 'number' && (
+                          <span 
+                            className={`ml-auto px-1.5 py-0.5 rounded text-[8px] font-black uppercase border leading-none ${
+                              company.metricas.crm_sla_medio >= 90 
+                                ? 'bg-emerald-50 text-emerald-600 border-emerald-200' 
+                                : company.metricas.crm_sla_medio >= 70 
+                                  ? 'bg-amber-50 text-amber-500 border-amber-200' 
+                                  : 'bg-red-50 text-red-500 border-red-200'
+                            }`}
+                            title="Cumprimento de Prazos (SLA) no CRM"
+                          >
+                            SLA: {company.metricas.crm_sla_medio}%
+                          </span>
+                        )}
                       </div>
 
                       {/* Score Bar */}
@@ -909,6 +933,41 @@ export default function AdminCompanies() {
                   ))}
                 </div>
               </div>
+
+              {/* Seção Nova: Médias por Etapa do CRM */}
+              {editingCompany.metricas && (
+                typeof editingCompany.metricas.crm_media_etapa_analise === 'number' || 
+                typeof editingCompany.metricas.crm_media_etapa_orcamento === 'number' ||
+                typeof editingCompany.metricas.crm_media_etapa_agendamento === 'number' ||
+                typeof editingCompany.metricas.crm_media_etapa_execucao === 'number' ||
+                typeof editingCompany.metricas.crm_media_etapa_vistoria === 'number'
+              ) && (
+                <div className="space-y-3 pt-3 border-t border-slate-100">
+                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-1">Qualidade por Etapa do CRM</h4>
+                  <p className="text-[10px] text-slate-500 italic">Notas médias manuais (0 a 5) atribuídas nas etapas dos projetos em andamento ou concluídos.</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                    {[
+                      { key: 'crm_media_etapa_analise', label: 'Análise' },
+                      { key: 'crm_media_etapa_orcamento', label: 'Orçamento' },
+                      { key: 'crm_media_etapa_agendamento', label: 'Agendamento' },
+                      { key: 'crm_media_etapa_execucao', label: 'Execução' },
+                      { key: 'crm_media_etapa_vistoria', label: 'Vistoria' },
+                    ].map((step) => {
+                      const val = editingCompany.metricas?.[step.key as keyof typeof editingCompany.metricas] as number;
+                      return (
+                        <div key={step.key} className="p-3 bg-slate-50 border border-slate-200/60 rounded-xl text-center space-y-1">
+                          <span className="text-[9px] font-bold text-slate-400 block uppercase truncate" title={step.label}>
+                            {step.label}
+                          </span>
+                          <span className="text-sm font-black text-slate-800 block">
+                            {typeof val === 'number' ? `⭐ ${val.toFixed(1)}` : '—'}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Seção 6: Observações Internas */}
               <div className="space-y-1">
