@@ -39,10 +39,9 @@ export default async function CarregamentoVeicularPage() {
       </div>
 
       <header className="absolute top-0 w-full px-4 py-4 md:px-8 md:py-6 flex justify-between items-center z-50">
-        <div className="flex items-center gap-2">
-          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-24 md:h-32 lg:h-36 w-auto object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105" />
-          <span className="font-montserrat font-black text-brand-navy dark:text-white text-xl tracking-tight">Integra Soluções SC</span>
-        </div>
+        <Link href="/" className="flex items-center group cursor-pointer">
+          <img src="/images/logo.png" alt="Integra Soluções SC" className="h-[4.5rem] sm:h-20 md:h-24 lg:h-28 w-auto object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105 dark:invert dark:hue-rotate-180" />
+        </Link>
         <ThemeToggle />
       </header>
 
