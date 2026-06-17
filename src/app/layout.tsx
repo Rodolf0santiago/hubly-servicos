@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Montserrat } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { getAllSiteSettingsAction } from "@/app/actions/settings";
@@ -35,6 +36,21 @@ export default async function RootLayout({
       className={`${inter.variable} ${montserrat.variable} antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-8CQ405ZB2N"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-8CQ405ZB2N');
+          `}
+        </Script>
+      </head>
       <body className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
         <ThemeProvider
           attribute="class"
