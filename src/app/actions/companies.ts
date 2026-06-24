@@ -116,6 +116,16 @@ export async function deleteCompanyAction(id: string): Promise<{ success: boolea
       throw new Error(error.message);
     }
 
+    // Cascade delete all blog posts associated with this company
+    const { error: blogDeleteError } = await supabaseAdmin
+      .from('blog_posts')
+      .delete()
+      .eq('company_id', id);
+
+    if (blogDeleteError) {
+      console.error('Error deleting company blog posts on cascade:', blogDeleteError);
+    }
+
     revalidatePath('/admin');
     return { success: true };
   } catch (error: any) {

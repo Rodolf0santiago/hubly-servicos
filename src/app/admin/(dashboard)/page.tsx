@@ -14,6 +14,7 @@ import AdminSolarProjects from '@/components/AdminSolarProjects';
 import AdminCompanies from '@/components/AdminCompanies';
 import AdminServiceTrackings from '@/components/AdminServiceTrackings';
 import AdminReports from '@/components/AdminReports';
+import AdminBlog from '@/components/AdminBlog';
 import { Sun, Images } from 'lucide-react';
 
 // Lista de Serviços Padrão para uso nos formulários do CRM
@@ -389,6 +390,12 @@ function DashboardContent() {
               <p className="text-xs text-slate-500 mt-1">Gerencie a pontuação, documentação e auditoria das empresas homologadas.</p>
             </>
           )}
+          {activeTab === 'blog' && (
+            <>
+              <h1 className="text-xl font-black text-slate-900 tracking-tight">Blog &amp; Notícias Corporativas</h1>
+              <p className="text-xs text-slate-500 mt-1">Gerencie artigos, dicas e comunicados das empresas homologadas.</p>
+            </>
+          )}
         </div>
 
         {/* Botões Operacionais (Apenas na aba Leads) */}
@@ -668,6 +675,11 @@ function DashboardContent() {
       {/* VIEW: EMPRESAS HOMOLOGADAS */}
       {activeTab === 'empresas' && (
         <AdminCompanies />
+      )}
+
+      {/* VIEW: BLOG DE EMPRESAS */}
+      {activeTab === 'blog' && (
+        <AdminBlog />
       )}
 
       {/* VIEW: GESTÃO OPERACIONAL DE LEADS */}

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Info } from 'lucide-react';
+import { Info, BookOpen } from 'lucide-react';
 import Hero from '@/components/Hero';
 import TrustSection from '@/components/TrustSection';
 import ServicesCards from '@/components/ServicesCards';
@@ -28,10 +28,14 @@ export default async function Home() {
         <Link href="/" className="flex items-center group cursor-pointer">
           <img src="/images/logo.png" alt="Integra Soluções SC" className="h-[5.5rem] sm:h-28 md:h-32 lg:h-36 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105 dark:invert dark:hue-rotate-180" />
         </Link>
-        <div className="flex items-center gap-3 md:gap-8 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md px-3 py-2 md:px-6 md:py-3 rounded-full border border-slate-200/50 dark:border-slate-800/50">
+        <div className="flex items-center gap-2 md:gap-4 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md px-3 py-2 md:px-5 md:py-2.5 rounded-full border border-slate-200/50 dark:border-slate-800/50">
           <Link href="/como-funciona" className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-brand-emerald/10 hover:bg-brand-emerald/20 text-brand-emerald dark:text-emerald-400 border border-brand-emerald/20 rounded-full text-xs sm:text-sm md:text-base font-semibold whitespace-nowrap transition-all">
             <Info className="w-3.5 h-3.5 md:w-4 md:h-4" />
             Como Trabalhamos
+          </Link>
+          <Link href="/blog" className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-brand-emerald/10 hover:bg-brand-emerald/20 text-brand-emerald dark:text-emerald-400 border border-brand-emerald/20 rounded-full text-xs sm:text-sm md:text-base font-semibold whitespace-nowrap transition-all">
+            <BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            Blog
           </Link>
           <ThemeToggle />
         </div>

@@ -16,7 +16,8 @@ import {
   Sun,
   Images,
   Building,
-  ClipboardList
+  ClipboardList,
+  BookOpen
 } from 'lucide-react';
 
 function SidebarNav() {
@@ -84,6 +85,16 @@ function SidebarNav() {
         }`}
       >
         <BarChart className="w-4 h-4" /> Relatórios
+      </Link>
+      <Link 
+        href="/admin?tab=blog" 
+        className={`flex items-center gap-3 px-3 py-2.5 rounded-md font-medium text-sm transition-all ${
+          tab === 'blog' 
+          ? 'bg-brand-emerald text-white shadow-md shadow-emerald-500/10' 
+          : 'text-slate-400 hover:text-white hover:bg-slate-800'
+        }`}
+      >
+        <BookOpen className="w-4 h-4" /> Blog de Empresas
       </Link>
       <Link 
         href="/admin?tab=editar-site" 

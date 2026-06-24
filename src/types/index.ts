@@ -150,3 +150,17 @@ export interface ServiceTracking {
   valor_projeto?: number;
 }
 
+export interface BlogPost {
+  id: string;
+  company_id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  cover_image_url?: string;
+  is_published: boolean;
+  author_id?: string;
+  created_at: string;
+}
+
+
