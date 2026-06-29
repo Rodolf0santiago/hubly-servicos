@@ -5,7 +5,6 @@ import { Company } from '@/types';
 import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/auth-token';
 import { revalidatePath } from 'next/cache';
-import { getLeadsAction } from './leads';
 
 async function verifyAdminSession(): Promise<boolean> {
   try {
@@ -28,18 +27,16 @@ async function verifyAdminSession(): Promise<boolean> {
 export async function getCompaniesAction(): Promise<{ success: boolean; data?: Company[]; error?: string }> {
   try {
     const { data, error } = await supabaseAdmin
-      .from('site_settings')
-      .select('value')
-      .eq('key', 'companies')
-      .maybeSingle();
+      .from('companies')
+      .select('*')
+      .order('nome_fantasia', { ascending: true });
 
     if (error) {
       console.error('Error fetching companies:', error);
       throw new Error(error.message);
     }
 
-    const list: Company[] = data ? (data.value as Company[]) : [];
-    return { success: true, data: list };
+    return { success: true, data: data as Company[] };
   } catch (error: any) {
     return { success: false, error: error.message || 'Erro ao buscar empresas.' };
   }
@@ -55,26 +52,30 @@ export async function saveCompanyAction(company: Company): Promise<{ success: bo
       return { success: false, error: 'Acesso não autorizado. Sessão inválida ou expirada.' };
     }
 
-    // Load existing list
-    const res = await getCompaniesAction();
-    if (!res.success) {
-      throw new Error(res.error || 'Erro ao carregar a lista de empresas.');
-    }
-
-    const currentList = res.data || [];
-    const index = currentList.findIndex(c => c.id === company.id);
-
-    if (index >= 0) {
-      // Update
-      currentList[index] = company;
-    } else {
-      // Insert
-      currentList.push(company);
-    }
-
     const { error } = await supabaseAdmin
-      .from('site_settings')
-      .upsert({ key: 'companies', value: currentList });
+      .from('companies')
+      .upsert({
+        id: company.id,
+        created_at: company.created_at || new Date().toISOString(),
+        nome_fantasia: company.nome_fantasia,
+        razao_social: company.razao_social || null,
+        cnpj: company.cnpj || null,
+        email: company.email || null,
+        telefone: company.telefone || null,
+        whatsapp: company.whatsapp || null,
+        cidade: company.cidade,
+        estado: company.estado,
+        endereco: company.endereco || null,
+        responsavel_nome: company.responsavel_nome || null,
+        status: company.status || 'Pendente',
+        servicos: company.servicos || [],
+        score: company.score || 0,
+        rating: company.rating || 0.0,
+        projetos_concluidos: company.projetos_concluidos || 0,
+        observacoes: company.observacoes || null,
+        logo_url: company.logo_url || null,
+        metricas: company.metricas || {},
+      });
 
     if (error) {
       console.error('Error saving company:', error);
@@ -82,6 +83,7 @@ export async function saveCompanyAction(company: Company): Promise<{ success: bo
     }
 
     revalidatePath('/admin');
+    revalidatePath('/');
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message || 'Erro ao salvar a empresa.' };
@@ -98,35 +100,20 @@ export async function deleteCompanyAction(id: string): Promise<{ success: boolea
       return { success: false, error: 'Acesso não autorizado. Sessão inválida ou expirada.' };
     }
 
-    // Load existing list
-    const res = await getCompaniesAction();
-    if (!res.success) {
-      throw new Error(res.error || 'Erro ao carregar a lista de empresas.');
-    }
-
-    const currentList = (res.data || []).filter(c => c.id !== id);
-
+    // A exclusão física da empresa na tabela 'companies' irá disparar o ON DELETE CASCADE
+    // configurado no banco de dados para os blog_posts e service_trackings vinculados.
     const { error } = await supabaseAdmin
-      .from('site_settings')
-      .update({ value: currentList })
-      .eq('key', 'companies');
+      .from('companies')
+      .delete()
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting company:', error);
       throw new Error(error.message);
     }
 
-    // Cascade delete all blog posts associated with this company
-    const { error: blogDeleteError } = await supabaseAdmin
-      .from('blog_posts')
-      .delete()
-      .eq('company_id', id);
-
-    if (blogDeleteError) {
-      console.error('Error deleting company blog posts on cascade:', blogDeleteError);
-    }
-
     revalidatePath('/admin');
+    revalidatePath('/');
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message || 'Erro ao deletar a empresa.' };
@@ -134,29 +121,32 @@ export async function deleteCompanyAction(id: string): Promise<{ success: boolea
 }
 
 /**
- * Recalcula o Score da empresa baseando-se nas avaliações dos Leads vinculados a ela.
+ * Recalcula o Score da empresa baseando-se nas avaliações dos Acompanhamentos de Serviço (CRM) vinculados a ela.
  */
 export async function recalcularScoreEmpresa(empresa_id: string): Promise<void> {
   try {
-    const res = await getCompaniesAction();
-    if (!res.success || !res.data) return;
-    const companies = res.data;
-    const cIndex = companies.findIndex(c => c.id === empresa_id);
-    if (cIndex < 0) return;
-    const company = companies[cIndex];
-
-    const trackingsRes = await supabaseAdmin
-      .from('site_settings')
-      .select('value')
-      .eq('key', 'service_trackings')
+    // 1. Buscar dados atuais da empresa
+    const { data: company, error: companyError } = await supabaseAdmin
+      .from('companies')
+      .select('*')
+      .eq('id', empresa_id)
       .maybeSingle();
 
-    let trackings: import('@/types').ServiceTracking[] = [];
-    if (trackingsRes.data && trackingsRes.data.value) {
-      trackings = trackingsRes.data.value as import('@/types').ServiceTracking[];
+    if (companyError || !company) {
+      console.error(`Empresa com ID ${empresa_id} não encontrada para recálculo de score.`);
+      return;
     }
 
-    const companyTrackings = trackings.filter(t => t.empresa_id === empresa_id);
+    // 2. Buscar acompanhamentos associados a esta empresa
+    const { data: companyTrackings, error: trackingsError } = await supabaseAdmin
+      .from('service_trackings')
+      .select('*')
+      .eq('empresa_id', empresa_id);
+
+    if (trackingsError) {
+      console.error(`Erro ao carregar acompanhamentos para recálculo de score: ${trackingsError.message}`);
+      return;
+    }
 
     // Agregação de dados do CRM (ServiceTrackings)
     let totalSlaScore = 0;
@@ -179,7 +169,7 @@ export async function recalcularScoreEmpresa(empresa_id: string): Promise<void> 
       vistoria: { sum: 0, count: 0 }
     };
 
-    companyTrackings.forEach(t => {
+    (companyTrackings || []).forEach(t => {
       if (t.etapa === 'finalizado') {
         concludedProjects++;
       } else {
@@ -242,7 +232,7 @@ export async function recalcularScoreEmpresa(empresa_id: string): Promise<void> 
     company.metricas.crm_media_etapa_vistoria = crm_media_etapa_vistoria;
 
     // Legado: avaliar baseando-se no 'finalizado' com avaliacao
-    const legacyTrackings = companyTrackings.filter(t => t.etapa === 'finalizado' && t.avaliacao);
+    const legacyTrackings = (companyTrackings || []).filter(t => t.etapa === 'finalizado' && t.avaliacao);
     let legacyCount = legacyTrackings.length;
     const legacyTotals = { qs: 0, cp: 0, org: 0, att: 0, pv: 0, fc: 0 };
     
@@ -308,7 +298,8 @@ export async function recalcularScoreEmpresa(empresa_id: string): Promise<void> 
     company.rating = Number(mediaRadar.toFixed(1));
     company.projetos_concluidos = concludedProjects + legacyCount;
 
-    await saveCompanyAction(company);
+    // Salvar as métricas atualizadas de volta no banco
+    await saveCompanyAction(company as Company);
   } catch (error) {
     console.error('Erro ao recalcular score da empresa:', error);
   }

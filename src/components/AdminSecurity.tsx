@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Mail, Key, Eye, EyeOff, ShieldAlert, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Mail, Key, Eye, EyeOff, ShieldAlert, AlertTriangle, CheckCircle, Database, Activity } from 'lucide-react';
 import { getAdminEmailAction, updateAdminCredentialsAction } from '@/app/actions/settings';
+import { runDataMigrationAction, MigrationReport } from '@/app/actions/migration';
 
 export default function AdminSecurity() {
   const [email, setEmail] = useState('');
@@ -19,6 +20,32 @@ export default function AdminSecurity() {
   const [loading, setLoading] = useState(false);
   const [loadingEmail, setLoadingEmail] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Estados de migração relacional
+  const [migrationLoading, setMigrationLoading] = useState(false);
+  const [migrationReport, setMigrationReport] = useState<MigrationReport | null>(null);
+
+  const handleRunMigration = async () => {
+    if (!window.confirm('Deseja iniciar a migração dos dados do formato JSON para as novas tabelas relacionais? Isso não apagará os dados antigos.')) {
+      return;
+    }
+    setMigrationLoading(true);
+    setMigrationReport(null);
+    try {
+      const res = await runDataMigrationAction();
+      setMigrationReport(res);
+    } catch (err: any) {
+      setMigrationReport({
+        success: false,
+        companiesMigrated: 0,
+        companiesErrors: [err.message || 'Erro inesperado.'],
+        trackingsMigrated: 0,
+        trackingsErrors: [],
+      });
+    } finally {
+      setMigrationLoading(false);
+    }
+  };
 
   // Fetch current admin email on load
   useEffect(() => {
@@ -108,7 +135,8 @@ export default function AdminSecurity() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Main Card Settings Form (Left/Center - 2 Cols) */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100 bg-slate-50/20">
             <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
               <Key className="w-4 h-4 text-red-500" />
@@ -260,6 +288,69 @@ export default function AdminSecurity() {
               </div>
             </form>
           )}
+          </div>
+
+          {/* Card de Migração Relacional */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-100 bg-slate-50/20">
+              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <Database className="w-4 h-4 text-brand-emerald" />
+                Migração de Banco de Dados (Fase 1)
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                Transfira os dados de Empresas e Acompanhamentos do formato JSON para as novas tabelas físicas no Supabase.
+              </p>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/30 rounded-xl text-xs text-blue-800 dark:text-blue-300 leading-relaxed">
+                <strong>Atenção:</strong> Certifique-se de que o script SQL <code>0001_create_relational_tables.sql</code> já foi executado no painel do Supabase antes de rodar a migração.
+              </div>
+
+              {migrationReport && (
+                <div className={`p-4 rounded-xl border text-xs space-y-2 ${
+                  migrationReport.success ? 'bg-emerald-50 text-emerald-800 border-emerald-100' : 'bg-amber-50 text-amber-800 border-amber-100'
+                }`}>
+                  <div className="font-bold flex items-center gap-1.5">
+                    {migrationReport.success ? <CheckCircle className="w-4 h-4 text-emerald-600" /> : <AlertTriangle className="w-4 h-4 text-amber-600" />}
+                    {migrationReport.success ? 'Migração Concluída com Sucesso!' : 'Migração Concluída com Alertas/Erros'}
+                  </div>
+                  <ul className="list-disc list-inside space-y-1 mt-1 font-medium">
+                    <li>Empresas migradas: {migrationReport.companiesMigrated}</li>
+                    <li>Acompanhamentos migrados: {migrationReport.trackingsMigrated}</li>
+                  </ul>
+                  
+                  {(migrationReport.companiesErrors.length > 0 || migrationReport.trackingsErrors.length > 0 || migrationReport.generalError) && (
+                    <div className="mt-2 pt-2 border-t border-amber-200/50 text-red-600 space-y-1 font-mono text-[10px] max-h-40 overflow-y-auto">
+                      {migrationReport.generalError && <div>Erro Geral: {migrationReport.generalError}</div>}
+                      {migrationReport.companiesErrors.map((err, i) => <div key={i}>Empresa Erro: {err}</div>)}
+                      {migrationReport.trackingsErrors.map((err, i) => <div key={i}>Acompanhamento Erro: {err}</div>)}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleRunMigration}
+                  disabled={migrationLoading}
+                  className="px-5 py-3 bg-brand-emerald hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-500/10 cursor-pointer disabled:opacity-50 flex items-center gap-2"
+                >
+                  {migrationLoading ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Migrando Dados...
+                    </>
+                  ) : (
+                    <>
+                      <Activity className="w-4 h-4" />
+                      Executar Migração de Dados
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Side Warning Panel (Right - 1 Col) */}

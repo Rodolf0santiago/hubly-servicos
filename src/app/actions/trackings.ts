@@ -28,18 +28,16 @@ async function verifyAdminSession(): Promise<boolean> {
 export async function getTrackingsAction(): Promise<{ success: boolean; data?: ServiceTracking[]; error?: string }> {
   try {
     const { data, error } = await supabaseAdmin
-      .from('site_settings')
-      .select('value')
-      .eq('key', 'service_trackings')
-      .maybeSingle();
+      .from('service_trackings')
+      .select('*')
+      .order('created_at', { ascending: false });
 
     if (error) {
       console.error('Error fetching trackings:', error);
       throw new Error(error.message);
     }
 
-    const list: ServiceTracking[] = data ? (data.value as ServiceTracking[]) : [];
-    return { success: true, data: list };
+    return { success: true, data: data as ServiceTracking[] };
   } catch (error: any) {
     return { success: false, error: error.message || 'Erro ao buscar acompanhamentos.' };
   }
@@ -55,33 +53,38 @@ export async function saveTrackingAction(tracking: ServiceTracking): Promise<{ s
       return { success: false, error: 'Acesso não autorizado. Sessão inválida ou expirada.' };
     }
 
-    // Load existing list
-    const res = await getTrackingsAction();
-    if (!res.success) {
-      throw new Error(res.error || 'Erro ao carregar a lista de acompanhamentos.');
-    }
-
-    const currentList = res.data || [];
-    const index = currentList.findIndex(t => t.id === tracking.id);
-
-    if (index >= 0) {
-      // Update
-      currentList[index] = tracking;
-    } else {
-      // Insert
-      currentList.push(tracking);
-    }
-
     const { error } = await supabaseAdmin
-      .from('site_settings')
-      .upsert({ key: 'service_trackings', value: currentList });
+      .from('service_trackings')
+      .upsert({
+        id: tracking.id,
+        created_at: tracking.created_at || new Date().toISOString(),
+        lead_id: tracking.lead_id || null,
+        cliente_nome: tracking.cliente_nome,
+        cliente_whatsapp: tracking.cliente_whatsapp,
+        cliente_email: tracking.cliente_email || null,
+        servico: tracking.servico,
+        empresa_id: tracking.empresa_id,
+        empresa_nome: tracking.empresa_nome,
+        empresa_whatsapp: tracking.empresa_whatsapp || null,
+        empresa_email: tracking.empresa_email || null,
+        etapa: tracking.etapa || 'analise_tecnica',
+        data_inicio: tracking.data_inicio || null,
+        data_previsao: tracking.data_previsao || null,
+        observacoes: tracking.observacoes || null,
+        avaliacao: tracking.avaliacao || {},
+        etapas_dados: tracking.etapas_dados || {},
+        score_global_projeto: tracking.score_global_projeto || 0,
+        dias_totais_atraso: tracking.dias_totais_atraso || 0,
+        status_projeto: tracking.status_projeto || 'em_dia',
+        valor_projeto: tracking.valor_projeto || 0.0,
+      });
 
     if (error) {
       console.error('Error saving tracking:', error);
       throw new Error(error.message);
     }
 
-    // Call recalculate
+    // Recalcular score da empresa associada
     if (tracking.empresa_id) {
       await recalcularScoreEmpresa(tracking.empresa_id);
     }
@@ -103,27 +106,31 @@ export async function deleteTrackingAction(id: string): Promise<{ success: boole
       return { success: false, error: 'Acesso não autorizado. Sessão inválida ou expirada.' };
     }
 
-    // Load existing list
-    const res = await getTrackingsAction();
-    if (!res.success) {
-      throw new Error(res.error || 'Erro ao carregar a lista de acompanhamentos.');
+    // Obter a empresa vinculada a este projeto para recalcular o score
+    const { data: tracking, error: fetchError } = await supabaseAdmin
+      .from('service_trackings')
+      .select('empresa_id')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (fetchError) {
+      console.error('Error fetching tracking before delete:', fetchError);
     }
 
-    // Find the company id before deleting so we can recalculate
-    const trackingToDelete = (res.data || []).find(t => t.id === id);
-    const empresa_id = trackingToDelete?.empresa_id;
+    const empresa_id = tracking?.empresa_id;
 
-    const filteredList = (res.data || []).filter(t => t.id !== id);
+    // Deletar o acompanhamento
+    const { error: deleteError } = await supabaseAdmin
+      .from('service_trackings')
+      .delete()
+      .eq('id', id);
 
-    const { error } = await supabaseAdmin
-      .from('site_settings')
-      .upsert({ key: 'service_trackings', value: filteredList });
-
-    if (error) {
-      console.error('Error deleting tracking:', error);
-      throw new Error(error.message);
+    if (deleteError) {
+      console.error('Error deleting tracking:', deleteError);
+      throw new Error(deleteError.message);
     }
 
+    // Recalcular o score da empresa parceira se ela existir
     if (empresa_id) {
       await recalcularScoreEmpresa(empresa_id);
     }

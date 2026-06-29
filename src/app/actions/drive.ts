@@ -278,25 +278,23 @@ export async function syncAllToGoogleDriveAction(): Promise<{ success: boolean; 
 
     // B. Empresas
     const { data: dbCompanies, error: compErr } = await supabaseAdmin
-      .from('site_settings')
-      .select('value')
-      .eq('key', 'companies')
-      .maybeSingle();
+      .from('companies')
+      .select('*')
+      .order('nome_fantasia', { ascending: true });
     
     if (compErr) throw new Error(`Erro ao buscar empresas: ${compErr.message}`);
 
     // C. Acompanhamentos
     const { data: dbTrackings, error: trackErr } = await supabaseAdmin
-      .from('site_settings')
-      .select('value')
-      .eq('key', 'service_trackings')
-      .maybeSingle();
+      .from('service_trackings')
+      .select('*')
+      .order('created_at', { ascending: false });
 
     if (trackErr) throw new Error(`Erro ao buscar acompanhamentos: ${trackErr.message}`);
 
     const leadsList: Lead[] = dbLeads || [];
-    const companiesList: Company[] = dbCompanies ? (dbCompanies.value as Company[]) : [];
-    const trackingsList: ServiceTracking[] = dbTrackings ? (dbTrackings.value as ServiceTracking[]) : [];
+    const companiesList: Company[] = (dbCompanies as Company[]) || [];
+    const trackingsList: ServiceTracking[] = (dbTrackings as ServiceTracking[]) || [];
 
     // 3. Gerar Strings CSV
     // Clientes
